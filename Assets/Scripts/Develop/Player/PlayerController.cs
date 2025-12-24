@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     private InputBuffer _inputBuffer;
     private PlayerMover _playerMover;
     private PlayerCollision _playerCollision;
-    private Vector3 _moveDirection;
+    private Vector2 _moveDirection;
     private EntityManager _em;
 
 
@@ -59,15 +59,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            Vector2 dir = context.ReadValue<Vector2>();
-            _moveDirection = new(dir.x, 0, dir.y);
-        }
-        else if (context.canceled)
-        {
-            _moveDirection = Vector2.zero;
-        }
+        _moveDirection = context.ReadValue<Vector2>();
     }
 
 }

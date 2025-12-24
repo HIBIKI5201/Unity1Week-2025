@@ -10,7 +10,7 @@ public class PlayerMover
 
     public void OnMove(Vector2 inputVector, float deltaTimed)
     {
-        Vector3 moveVector = new Vector3(inputVector.x, inputVector.y, 0);
+        Vector3 moveVector = new Vector3(inputVector.x, 0, inputVector.y);
         _transform.position += moveVector * _config.MoveSpeed * deltaTimed;
     }
 
