@@ -15,7 +15,7 @@ public class PlayerCollision
         _entityManager = em;
         _config = config;
         _bulletQuery = _entityManager.CreateEntityQuery(
-            ComponentType.ReadOnly<Bullet>(),
+            ComponentType.ReadOnly<BulletEntity>(),
             ComponentType.ReadOnly<LocalTransform>(),
             ComponentType.Exclude<Hit>()
         );
@@ -33,7 +33,7 @@ public class PlayerCollision
         //バレットのデータを取得
         var bullets = _bulletQuery.ToEntityArray(Allocator.TempJob);
         var transforms = _bulletQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
-        var bulletData = _bulletQuery.ToComponentDataArray<Bullet>(Allocator.TempJob);
+        var bulletData = _bulletQuery.ToComponentDataArray<BulletEntity>(Allocator.TempJob);
         var hitResults = new NativeArray<bool>(count, Allocator.TempJob);
         //ジョブを生成、実行
         var job = new PlayerBulletHitJob

@@ -8,7 +8,7 @@ using Unity.Transforms;
 public struct PlayerBulletHitJob : IJobParallelFor
 {
     [ReadOnly] public NativeArray<LocalTransform> BulletTransforms;
-    [ReadOnly] public NativeArray<Bullet> BulletData;
+    [ReadOnly] public NativeArray<BulletEntity> BulletData;
     [ReadOnly] public float3 PlayerPos;
     [ReadOnly] public float PlayerRadius;
 
