@@ -1,3 +1,4 @@
+using Unity.Entities;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -5,6 +6,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerConfig _config;
     private InputBuffer _inputBuffer;
     private PlayerMover _playerMover;
+    private PlayerCollision _playerCollision;
     private Vector2 _moveDirection;
 
 
@@ -13,6 +15,7 @@ public class PlayerController : MonoBehaviour
         _inputBuffer = GetComponent<InputBuffer>();
         InitialRegistration();
         _playerMover = new PlayerMover(_config, transform);
+        _playerCollision = new PlayerCollision(World.DefaultGameObjectInjectionWorld.EntityManager, transform, _config);
     }
 
     private void OnDestroy()
@@ -23,6 +26,14 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _playerMover.OnMove(_moveDirection, Time.deltaTime);
+    }
+
+    private void LateUpdate()
+    {
+        if (_playerCollision.LateUpdate())
+        {
+            Debug.Log("Dead");
+        }
     }
 
     private void InitialRegistration()
