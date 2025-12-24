@@ -1,16 +1,8 @@
 using UnityEngine;
 
-public class PlayerConfig : MonoBehaviour
+[CreateAssetMenu(fileName = "PlayerConfig", menuName = "ScriptableObjects/PlayerConfig")]
+public class PlayerConfig : ScriptableObject
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public float MoveSpeed => _moveSpeed;
+    [SerializeField] private float _moveSpeed = 5f;
 }
