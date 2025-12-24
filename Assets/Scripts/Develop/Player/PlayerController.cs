@@ -1,6 +1,8 @@
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(InputBuffer))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private PlayerConfig _config;
@@ -29,7 +31,7 @@ public class PlayerController : MonoBehaviour
     {
         _playerMover.OnMove(_moveDirection, Time.deltaTime);
 
-        if (Input.GetMouseButtonDown(0))
+        if (Mouse.current.leftButton.isPressed)
         {
             _em.Shoot(0, transform.position, transform.forward);
         }
