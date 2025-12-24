@@ -48,4 +48,5 @@ public class PlayerController : MonoBehaviour
             _moveDirection = Vector2.zero;
         }
     }
+
 }
