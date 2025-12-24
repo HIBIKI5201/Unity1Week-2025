@@ -1,6 +1,5 @@
-using UnityEngine;
 using Unity.Entities;
-using Unity.Mathematics;
+using UnityEngine;
 
 public class BulletAuthoring : MonoBehaviour
 {
@@ -9,17 +8,20 @@ public class BulletAuthoring : MonoBehaviour
     public float Radius;
     public BulletType BulletType;
 
-    class moveBaker : Baker<BulletAuthoring>
+    class Baker : Baker<BulletAuthoring>
     {
         public override void Bake(BulletAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new BulletEntity
             {
-                Direction = authoring.Direction,
-                Speed = authoring.Speed,
-                Radius =  authoring.Radius,
+                Radius = authoring.Radius,
             });
+            AddComponent(entity, new MoveEntity()
+            {
+                Velocity = authoring.Direction * authoring.Speed
+            });
+
             // 弾の種類に応じてタグを付与
             switch (authoring.BulletType)
             {
