@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     {
         _inputBuffer = GetComponent<InputBuffer>();
         InitialRegistration();
-        PlayerMover playerMover = new PlayerMover(_config, transform);
+        _playerMover = new PlayerMover(_config, transform);
     }
 
     private void OnDestroy()
@@ -41,11 +41,11 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            _moveDirection=context.ReadValue<Vector2>();
+            _moveDirection = context.ReadValue<Vector2>();
         }
-        else if(context.canceled)
+        else if (context.canceled)
         {
-            _moveDirection=Vector2.zero;
+            _moveDirection = Vector2.zero;
         }
     }
 }

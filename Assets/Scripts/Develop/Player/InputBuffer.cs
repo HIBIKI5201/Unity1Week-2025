@@ -6,7 +6,7 @@ public class InputBuffer : MonoBehaviour
 {
     private const string PLAYER_MOVE = "Move";
 
-    public InputAction PlayerMove => PlayerMove;
+    public InputAction PlayerMove => _playerMove;
     private InputAction _playerMove;
 
     private void Awake()

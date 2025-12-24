@@ -1,6 +1,7 @@
+using NUnit.Framework;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerConfig", menuName = "ScriptableObjects/PlayerConfig")]
+[CreateAssetMenu(fileName = "PlayerConfig", menuName = "ScriptableObjects/PlayerConfig",order = -1)]
 public class PlayerConfig : ScriptableObject
 {
     public float MoveSpeed => _moveSpeed;
