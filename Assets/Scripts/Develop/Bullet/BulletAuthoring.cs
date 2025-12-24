@@ -2,33 +2,6 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Mathematics;
 
-public struct Bullet : IComponentData
-{
-    public float3 Direction;
-    public float Speed;
-    public float Radius;
-}
-
-/// <summary>
-/// 弾の種類
-/// </summary>
-public enum BulletType
-{
-    Player,
-    Enemy
-}
-/// <summary>
-/// プレイヤーが発射した弾であることを示すタグ
-/// </summary>
-public struct PlayerBullet : IComponentData
-{
-}
-/// <summary>
-/// 敵が発射した弾であることを示すタグ
-/// </summary>
-public struct EnemyBullet : IComponentData
-{
-}
 public class BulletAuthoring : MonoBehaviour
 {
     public Vector3 Direction;
@@ -41,7 +14,7 @@ public class BulletAuthoring : MonoBehaviour
         public override void Bake(BulletAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new Bullet
+            AddComponent(entity, new BulletEntity
             {
                 Direction = authoring.Direction,
                 Speed = authoring.Speed,

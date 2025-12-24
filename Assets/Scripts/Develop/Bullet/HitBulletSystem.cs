@@ -24,7 +24,7 @@ public partial struct HitBulletSystem : ISystem
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
         foreach (var (transform, bullet, entity) in
-                 SystemAPI.Query<RefRO<LocalTransform>, RefRO<Bullet>>()
+                 SystemAPI.Query<RefRO<LocalTransform>, RefRO<BulletEntity>>()
                      .WithAll<Hit>()
                      .WithEntityAccess())
         {
