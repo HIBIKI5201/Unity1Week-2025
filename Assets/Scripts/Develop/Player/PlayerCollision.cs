@@ -16,6 +16,7 @@ public class PlayerCollision
         _config = config;
         _bulletQuery = _entityManager.CreateEntityQuery(
             ComponentType.ReadOnly<BulletEntity>(),
+            ComponentType.ReadOnly<EnemyBullet>(),
             ComponentType.ReadOnly<LocalTransform>(),
             ComponentType.Exclude<Hit>()
         );
