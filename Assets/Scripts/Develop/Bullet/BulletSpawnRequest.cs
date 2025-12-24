@@ -1,10 +1,19 @@
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
 
-public struct BulletSpawnRequest : IComponentData
+public readonly struct BulletSpawnRequest : IComponentData
 {
-    public int PrefabIndex;
-    public float3 Position;
-    public float3 Direction;
+    public BulletSpawnRequest(
+        int index,
+        float3 pos,
+        float3 dir)
+    {
+        PrefabIndex = index;
+        Position = pos;
+        Direction = dir;
+    }
+
+    public readonly int PrefabIndex;
+    public readonly float3 Position;
+    public readonly float3 Direction;
 }
