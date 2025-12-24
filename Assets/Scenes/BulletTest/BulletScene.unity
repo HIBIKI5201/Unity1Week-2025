@@ -154,6 +154,7 @@ MonoBehaviour:
   Direction: {x: 1, y: 0, z: 0}
   Speed: 1
   Radius: 1
+  BulletType: 1
 --- !u!65 &157058035
 BoxCollider:
   m_ObjectHideFlags: 0
