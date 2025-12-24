@@ -11,12 +11,10 @@ using Unity.Collections;
 public partial struct HitBulletSystem : ISystem
 {
     /// <summary>
-    /// 毎フレーム呼ばれ、敵弾がプレイヤーに当たったかを判定する
+    /// 毎フレーム呼ばれ、当たった弾を削除する
     /// </summary>
     public void OnUpdate(ref SystemState state)
     {
-        
-
         // Simulation 終了時に実行される ECB を取得
         var ecb =
             SystemAPI
@@ -29,7 +27,6 @@ public partial struct HitBulletSystem : ISystem
                      .WithEntityAccess())
         {
             ecb.DestroyEntity(entity);
-            
         }
     }
 }
