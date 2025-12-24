@@ -148,7 +148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d38b7f9fdea85c4287df4cd75bd0852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletPrefabBufferAuthring
-  bulletPrefabs: []
+  bulletPrefabs:
+  - {fileID: -4102652153208108966, guid: 45bcaf47f52c88f4b94ca23879be01b7, type: 3}
 --- !u!4 &1972006094
 Transform:
   m_ObjectHideFlags: 0
