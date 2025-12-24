@@ -8,14 +8,16 @@ public class PlayerController : MonoBehaviour
     private PlayerMover _playerMover;
     private PlayerCollision _playerCollision;
     private Vector2 _moveDirection;
+    private EntityManager _em;
 
 
     private void Start()
     {
+        _em = World.DefaultGameObjectInjectionWorld.EntityManager;
         _inputBuffer = GetComponent<InputBuffer>();
         InitialRegistration();
         _playerMover = new PlayerMover(_config, transform);
-        _playerCollision = new PlayerCollision(World.DefaultGameObjectInjectionWorld.EntityManager, transform, _config);
+        _playerCollision = new PlayerCollision(_em, transform, _config);
     }
 
     private void OnDestroy()
@@ -26,6 +28,11 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _playerMover.OnMove(_moveDirection, Time.deltaTime);
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            _em.Shoot(0, transform.position, transform.forward);
+        }
     }
 
     private void LateUpdate()
