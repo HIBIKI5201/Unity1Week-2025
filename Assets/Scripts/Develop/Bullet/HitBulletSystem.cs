@@ -31,9 +31,5 @@ public partial struct HitBulletSystem : ISystem
             ecb.DestroyEntity(entity);
             
         }
-        ecb.Playback(state.EntityManager);
-
-        // バッファを破棄
-        ecb.Dispose();
     }
 }
