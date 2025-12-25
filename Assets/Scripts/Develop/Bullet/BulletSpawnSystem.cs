@@ -8,7 +8,7 @@ public partial struct BulletSpawnSystem : ISystem
     {
         if (!SystemAPI.TryGetSingletonBuffer<BulletPrefabElement>(out var prefabBuffer))
         {
-            throw new System.ArgumentException("Bullet Prefab Element is not found");
+            return;
         }
 
         var ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
