@@ -1,26 +1,27 @@
-using UnityEngine;
-using Unity.Entities;
 using Unity.Burst;
+using Unity.Entities;
 using Unity.Transforms;
 
 [BurstCompile]
 public partial struct MoveSystem : ISystem
 {
-    public void OnCreate(ref SystemState state){}
-    public void OnDestroy(ref SystemState state){}
-
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        foreach (var (move,xform) in
-                 SystemAPI.Query<RefRO<Bullet>,RefRW<LocalTransform>>() )
+        MoveJob job = new MoveJob()
         {
-            ProcessMove(ref state ,move,xform);
-        }
+            DeltaTime = SystemAPI.Time.DeltaTime
+        };
+        state.Dependency = job.ScheduleParallel(state.Dependency);
     }
 
-    private void ProcessMove(ref SystemState state, RefRO<Bullet> move, RefRW<LocalTransform> xform)
+    public partial struct MoveJob : IJobEntity
     {
-        xform.ValueRW.Position = xform.ValueRW.Position + move.ValueRO.Direction * move.ValueRO.Speed * SystemAPI.Time.DeltaTime ;
+        public float DeltaTime;
+
+        public void Execute(in MoveEntity move, ref LocalTransform tr)
+        {
+            tr.Position = tr.Position + move.Velocity * DeltaTime;
+        }
     }
 }

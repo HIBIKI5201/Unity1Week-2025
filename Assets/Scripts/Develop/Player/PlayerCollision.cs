@@ -1,4 +1,6 @@
+using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
@@ -13,7 +15,8 @@ public class PlayerCollision
         _entityManager = em;
         _config = config;
         _bulletQuery = _entityManager.CreateEntityQuery(
-            ComponentType.ReadOnly<Bullet>(),
+            ComponentType.ReadOnly<BulletEntity>(),
+            ComponentType.ReadOnly<EnemyBullet>(),
             ComponentType.ReadOnly<LocalTransform>(),
             ComponentType.Exclude<Hit>()
         );
@@ -21,31 +24,45 @@ public class PlayerCollision
 
     private PlayerConfig _config;
     private Transform _transform;
-    EntityManager _entityManager;
-    EntityQuery _bulletQuery;
+    private EntityManager _entityManager;
+    private EntityQuery _bulletQuery;
 
     public bool LateUpdate()
     {
-        var playerPos = (float3)_transform.position;
-
-        using (var bullets = _bulletQuery.ToEntityArray(Unity.Collections.Allocator.Temp))
-        using (var transforms = _bulletQuery.ToComponentDataArray<LocalTransform>(Unity.Collections.Allocator.Temp))
-        using (var bulletData = _bulletQuery.ToComponentDataArray<Bullet>(Unity.Collections.Allocator.Temp))
+        int count = _bulletQuery.CalculateEntityCount();
+        if (count == 0) return false;
+        //バレットのデータを取得
+        var bullets = _bulletQuery.ToEntityArray(Allocator.TempJob);
+        var transforms = _bulletQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
+        var bulletData = _bulletQuery.ToComponentDataArray<BulletEntity>(Allocator.TempJob);
+        var hitResults = new NativeArray<bool>(count, Allocator.TempJob);
+        //ジョブを生成、実行
+        var job = new PlayerBulletHitJob
         {
-            Debug.Log($"Bullet Count : {bullets.Length}");
-            for (int i = 0; i < bullets.Length; i++)
+            BulletTransforms = transforms,
+            BulletData = bulletData,
+            PlayerPos = (float3)_transform.position,
+            PlayerRadius = _config.CollisionRadius,
+            HitResults = hitResults
+        };
+        JobHandle handle = job.Schedule(count, 64);
+        handle.Complete();
+        //結果をもとに処理
+        bool isHit = false;
+        for (int i = 0; i < count; i++)
+        {
+            if (hitResults[i])
             {
-                float dist = math.distance(playerPos, transforms[i].Position);
-                float hitRadius = _config.CollisionRadius + bulletData[i].Radius;
-                Debug.Log(dist + (" ") + hitRadius);
-                if (dist <= hitRadius)
-                {
-                    // 当たった事実だけを付与
-                    _entityManager.AddComponent<Hit>(bullets[i]);
-                    return true;
-                }
+                _entityManager.AddComponent<Hit>(bullets[i]);
+                isHit = true;
             }
         }
-        return false;
+        //メモリ開放
+        bullets.Dispose();
+        transforms.Dispose();
+        bulletData.Dispose();
+        hitResults.Dispose();
+
+        return isHit;
     }
 }

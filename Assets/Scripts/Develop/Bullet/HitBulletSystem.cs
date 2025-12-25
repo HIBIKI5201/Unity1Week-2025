@@ -11,12 +11,10 @@ using Unity.Collections;
 public partial struct HitBulletSystem : ISystem
 {
     /// <summary>
-    /// 毎フレーム呼ばれ、敵弾がプレイヤーに当たったかを判定する
+    /// 毎フレーム呼ばれ、当たった弾を削除する
     /// </summary>
     public void OnUpdate(ref SystemState state)
     {
-        
-
         // Simulation 終了時に実行される ECB を取得
         var ecb =
             SystemAPI
@@ -24,16 +22,11 @@ public partial struct HitBulletSystem : ISystem
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
         foreach (var (transform, bullet, entity) in
-                 SystemAPI.Query<RefRO<LocalTransform>, RefRO<Bullet>>()
+                 SystemAPI.Query<RefRO<LocalTransform>, RefRO<BulletEntity>>()
                      .WithAll<Hit>()
                      .WithEntityAccess())
         {
             ecb.DestroyEntity(entity);
-            
         }
-        ecb.Playback(state.EntityManager);
-
-        // バッファを破棄
-        ecb.Dispose();
     }
 }

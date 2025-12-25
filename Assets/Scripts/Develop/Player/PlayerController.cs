@@ -1,6 +1,8 @@
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(InputBuffer))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private PlayerConfig _config;
@@ -8,14 +10,16 @@ public class PlayerController : MonoBehaviour
     private PlayerMover _playerMover;
     private PlayerCollision _playerCollision;
     private Vector2 _moveDirection;
+    private EntityManager _em;
 
 
     private void Start()
     {
+        _em = World.DefaultGameObjectInjectionWorld.EntityManager;
         _inputBuffer = GetComponent<InputBuffer>();
         InitialRegistration();
         _playerMover = new PlayerMover(_config, transform);
-        _playerCollision = new PlayerCollision(World.DefaultGameObjectInjectionWorld.EntityManager, transform, _config);
+        _playerCollision = new PlayerCollision(_em, transform, _config);
     }
 
     private void OnDestroy()
@@ -26,6 +30,11 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _playerMover.OnMove(_moveDirection, Time.deltaTime);
+
+        if (Mouse.current.leftButton.isPressed)
+        {
+            _em.Shoot(0, transform.position, transform.forward);
+        }
     }
 
     private void LateUpdate()
@@ -48,16 +57,9 @@ public class PlayerController : MonoBehaviour
         _inputBuffer.PlayerMove.canceled -= OnMove;
     }
 
-    private void OnMove(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void OnMove(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            _moveDirection = context.ReadValue<Vector2>();
-        }
-        else if (context.canceled)
-        {
-            _moveDirection = Vector2.zero;
-        }
+        _moveDirection = context.ReadValue<Vector2>();
     }
 
 }
