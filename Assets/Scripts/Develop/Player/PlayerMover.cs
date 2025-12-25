@@ -10,11 +10,13 @@ public class PlayerMover
         _camera = camera;
     }
 
-    public void OnMove(Vector2 inputVector, Vector3 camraScrollVelocity, float deltaTimed)
+    public void OnMove(Vector2 inputVector, Vector3 cameraScrollVelocity, float deltaTimed)
     {
-        Vector3 inputMove = new Vector3(inputVector.x, 0, inputVector.y * _config.MoveSpeed);
-        Vector3 nextPosition = _transform.position + (inputMove + camraScrollVelocity) * deltaTimed;
+        Vector3 inputMove = new Vector3(inputVector.x, inputVector.y * _config.MoveSpeed, 0f);
+        Vector3 scrollMove = new Vector3(0f, cameraScrollVelocity.y, 0f);
+        Vector3 nextPosition = _transform.position + (inputMove + cameraScrollVelocity) * deltaTimed;
         nextPosition = ClampPositionToCamera(nextPosition);
+        nextPosition.z = _transform.position.z;
         _transform.position = nextPosition;
     }
 
@@ -25,9 +27,10 @@ public class PlayerMover
 
     private Vector3 ClampPositionToCamera(Vector3 position)
     {
+        float depth = position.z - _camera.transform.position.z;
         // カメラの表示範囲（ワールド座標）
-        Vector3 min = _camera.ViewportToWorldPoint(new Vector3(0, 0, _camera.nearClipPlane));
-        Vector3 max = _camera.ViewportToWorldPoint(new Vector3(1, 1, _camera.nearClipPlane));
+        Vector3 min = _camera.ViewportToWorldPoint(new Vector3(0, 0, depth));
+        Vector3 max = _camera.ViewportToWorldPoint(new Vector3(1, 1, depth));
         // プレイヤーの当たり判定サイズ
         Vector3 extents = _collider.bounds.extents;
 

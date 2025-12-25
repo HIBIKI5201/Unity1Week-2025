@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private PlayerConfig _config;
+    [SerializeField] private Camera _camera;
+    [SerializeField] private CameraMover _cameraMover;
     private InputBuffer _inputBuffer;
     private PlayerMover _playerMover;
     private PlayerAttacker _playerAttacker;
@@ -18,8 +20,9 @@ public class PlayerController : MonoBehaviour
     {
         _em = World.DefaultGameObjectInjectionWorld.EntityManager;
         _inputBuffer = GetComponent<InputBuffer>();
+        Collider playerCollider = GetComponent<Collider>();
         InitialRegistration();
-        _playerMover = new PlayerMover(_config, transform);
+        _playerMover = new PlayerMover(_config, transform, playerCollider, _camera);
         _playerAttacker = new PlayerAttacker();
         _playerCollision = new PlayerCollision(_em, transform, _config);
     }
@@ -31,7 +34,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        _playerMover.OnMove(_moveDirection, Time.deltaTime);
+        _playerMover.OnMove(_moveDirection, _cameraMover.ScrollVelocity, Time.deltaTime);
 
         if (Mouse.current.leftButton.isPressed)
         {
