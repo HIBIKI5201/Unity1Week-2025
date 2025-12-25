@@ -36,7 +36,7 @@ public class MoveAuthoring : MonoBehaviour
     public float Radius;
     public BulletType BulletType;
 
-    class moveBaker : Baker<MoveAuthoring>
+    class MoveBaker : Baker<MoveAuthoring>
     {
         public override void Bake(MoveAuthoring authoring)
         {
