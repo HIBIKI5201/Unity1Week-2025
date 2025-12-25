@@ -1,29 +1,31 @@
-using Unity.Entities;
 using UnityEngine;
+using Unity.Entities;
+using Unity.Mathematics;
 
-public class BulletAuthoring : MonoBehaviour
+public struct Bullet : IComponentData
+{
+    public float3 Direction;
+    public float Speed;
+    public float Radius;
+}
+public class MoveAuthoring : MonoBehaviour
 {
     public Vector3 Direction;
     public float Speed;
     public float Radius;
     public BulletType BulletType;
-    public int damage;
 
-    class Baker : Baker<BulletAuthoring>
+    class MoveBaker : Baker<MoveAuthoring>
     {
-        public override void Bake(BulletAuthoring authoring)
+        public override void Bake(MoveAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new BulletEntity
+            AddComponent(entity, new Bullet
             {
-                Radius = authoring.Radius,
-                Damage = authoring.damage
+                Direction = authoring.Direction,
+                Speed = authoring.Speed,
+                Radius =  authoring.Radius,
             });
-            AddComponent(entity, new MoveEntity()
-            {
-                Velocity = authoring.Direction * authoring.Speed
-            });
-
             // 弾の種類に応じてタグを付与
             switch (authoring.BulletType)
             {
