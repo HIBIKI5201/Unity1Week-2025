@@ -59,12 +59,14 @@ public class PlayerController : MonoBehaviour
     {
         _inputBuffer.PlayerMove.performed += OnMove;
         _inputBuffer.PlayerMove.canceled += OnMove;
+        _inputBuffer.PlayerAttack.started += OnAttack;
     }
 
     private void UnRegistrantion()
     {
         _inputBuffer.PlayerMove.performed -= OnMove;
         _inputBuffer.PlayerMove.canceled -= OnMove;
+        _inputBuffer.PlayerAttack.started -= OnAttack;
     }
 
     private void OnMove(InputAction.CallbackContext context)
@@ -72,4 +74,8 @@ public class PlayerController : MonoBehaviour
         _moveDirection = context.ReadValue<Vector2>();
     }
 
+    private void OnAttack(InputAction.CallbackContext context)
+    {
+        _playerAttacker?.OnAttack();
+    }
 }
