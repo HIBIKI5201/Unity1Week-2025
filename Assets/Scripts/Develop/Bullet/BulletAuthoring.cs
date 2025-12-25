@@ -7,6 +7,7 @@ public class BulletAuthoring : MonoBehaviour
     public float Speed;
     public float Radius;
     public BulletType BulletType;
+    public int damage;
 
     class Baker : Baker<BulletAuthoring>
     {
@@ -16,6 +17,7 @@ public class BulletAuthoring : MonoBehaviour
             AddComponent(entity, new BulletEntity
             {
                 Radius = authoring.Radius,
+                Damage = authoring.damage
             });
             AddComponent(entity, new MoveEntity()
             {
