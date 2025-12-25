@@ -8,27 +8,6 @@ public struct Bullet : IComponentData
     public float Speed;
     public float Radius;
 }
-
-/// <summary>
-/// 弾の種類
-/// </summary>
-public enum BulletType
-{
-    Player,
-    Enemy
-}
-/// <summary>
-/// プレイヤーが発射した弾であることを示すタグ
-/// </summary>
-public struct PlayerBullet : IComponentData
-{
-}
-/// <summary>
-/// 敵が発射した弾であることを示すタグ
-/// </summary>
-public struct EnemyBullet : IComponentData
-{
-}
 public class MoveAuthoring : MonoBehaviour
 {
     public Vector3 Direction;
