@@ -1,16 +1,16 @@
+using NUnit.Framework.Constraints;
+using System;
 using UnityEngine;
 
 public class CameraMover : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public Vector3 ScrollVelocity { get; private set; }
+    [SerializeField] private Vector3 _scrollDirection = Vector3.forward;
+    [SerializeField] private float _moveSpeed = 2f;
 
-    // Update is called once per frame
     void Update()
     {
-        
+        ScrollVelocity = _scrollDirection.normalized * _moveSpeed;
+        transform.position += ScrollVelocity * Time.deltaTime;
     }
 }
