@@ -9,7 +9,7 @@ public class CameraMover : MonoBehaviour
 
     void Update()
     {
-        ScrollVelocity = new Vector3(0f, _moveSpeed, 0f);
+        ScrollVelocity = new Vector3(0f, 0f, _moveSpeed);
         transform.position += ScrollVelocity * Time.deltaTime;
     }
 }
