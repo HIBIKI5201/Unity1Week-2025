@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerConfig _config;
     private InputBuffer _inputBuffer;
     private PlayerMover _playerMover;
+    private PlayerAttacker _playerAttacker;
     private PlayerCollision _playerCollision;
     private Vector2 _moveDirection;
     private EntityManager _em;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
         _inputBuffer = GetComponent<InputBuffer>();
         InitialRegistration();
         _playerMover = new PlayerMover(_config, transform);
+        _playerAttacker = new PlayerAttacker();
         _playerCollision = new PlayerCollision(_em, transform, _config);
     }
 
@@ -41,8 +43,13 @@ public class PlayerController : MonoBehaviour
     {
         if (_playerCollision.LateUpdate())
         {
-            Debug.Log("Dead");
+            Dead();
         }
+    }
+
+    private void Dead()
+    {
+        Debug.Log("Dead");
     }
 
     private void InitialRegistration()
