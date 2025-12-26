@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 [UpdateBefore(typeof(DamageApplySystem))]
@@ -16,6 +16,7 @@ public partial struct PlayerBulletHitSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var ecb = new EntityCommandBuffer(state.WorldUpdateAllocator);
+        var em = state.EntityManager;
 
         var bulletQuery = SystemAPI.QueryBuilder()
             .WithAll<LocalTransform, BulletEntity, PlayerBullet>()
@@ -37,10 +38,13 @@ public partial struct PlayerBulletHitSystem : ISystem
             float enemyRadius = enemyData.ValueRO.Radius;
 
             int totalDamage = 0;
-            Entity hitBullet = Entity.Null;
-
+            var hitBullets = new List<Entity>(4);
+            // ローカルで同フレーム中の弾ごとのヒット履歴を保持（ECB の反映前に判定を重複させないため）
+            var localHitSets = new Dictionary<Entity, HashSet<Entity>>();
+            //ヒット検出
             for (int i = 0; i < bulletEntities.Length; i++)
             {
+                var bulletEntity = bulletEntities[i];
                 float3 bulletPos = bulletTransforms[i].Position;
                 float bulletRadius = bulletData[i].Radius;
 
@@ -49,14 +53,43 @@ public partial struct PlayerBulletHitSystem : ISystem
 
                 if (distSq <= hitDist * hitDist)
                 {
+                    bool alreadyHit = false;
+                    // 永続バッファに既に記録があるかチェック（過去フレームで当たっていないか）
+                    if (em.HasComponent<HitTarget>(bulletEntity))
+                    {
+                        var buf = em.GetBuffer<HitTarget>(bulletEntity);
+                        for (int bi = 0; bi < buf.Length; bi++)
+                        {
+                            if (buf[bi].Target == enemyEntity)
+                            {
+                                alreadyHit = true;
+                                break;
+                            }
+                        }
+                    }
+                    // 同フレーム内で既に記録済みかチェック（ECB の反映前の追加分を考慮）
+                    if (!alreadyHit && localHitSets.TryGetValue(bulletEntity, out var set))
+                    {
+                        if (set.Contains(enemyEntity)) alreadyHit = true;
+                    }
+
+                    if (alreadyHit)
+                        continue;
+
+                    // ヒットを集計
                     totalDamage += bulletData[i].Damage;
-                    hitBullet = bulletEntities[i];
-                    // ここでは即座に弾を破壊しない（貫通判定は AbilityHitDispatchSystem 側で行う）
-                    //ecb.DestroyEntity(bulletEntities[i]);
-                    //break;
+                    hitBullets.Add(bulletEntity);
+                    // ローカル履歴に追加
+                    if (!localHitSets.TryGetValue(bulletEntity, out var localSet))
+                    {
+                        localSet = new HashSet<Entity>();
+                        localHitSets[bulletEntity] = localSet;
+                    }
+                    localSet.Add(enemyEntity);
                 }
             }
 
+            // 集計後に一度だけイベントを発行
             if (totalDamage > 0)
             {
                 ecb.AddComponent(enemyEntity, new DamageEvent
@@ -64,15 +97,32 @@ public partial struct PlayerBulletHitSystem : ISystem
                     Value = totalDamage
                 });
 
-                ecb.AddComponent(enemyEntity, new HitEvent
+                // ヒットごとに独立したイベントエンティティを作成し、弾のバッファへヒット履歴を追記する
+                for (int i = 0; i < hitBullets.Count; i++)
                 {
-                    Bullet = hitBullet,
-                    Target = enemyEntity,
-                    Position = enemyPos
-                });
+                    var hitBullet = hitBullets[i];
+                    var evt = ecb.CreateEntity();
+                    ecb.AddComponent(evt, new HitEvent
+                    {
+                        Bullet = hitBullet,
+                        Target = enemyEntity,
+                        Position = enemyPos
+                    });
+
+                    // 永続バッファが存在すればそこに追加して、以降のフレームでも同一敵を無視できるようにする
+                    if (em.HasComponent<HitTarget>(hitBullet))
+                    {
+                        ecb.AppendToBuffer(hitBullet, new HitTarget { Target = enemyEntity });
+                    }
+                }
             }
         }
 
         ecb.Playback(state.EntityManager);
+
+        // 配列の解放
+        bulletTransforms.Dispose();
+        bulletData.Dispose();
+        bulletEntities.Dispose();
     }
 }

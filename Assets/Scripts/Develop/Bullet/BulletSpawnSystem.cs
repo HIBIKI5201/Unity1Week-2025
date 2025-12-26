@@ -34,6 +34,8 @@ public partial struct BulletSpawnSystem : ISystem
             if (pen > 0)
             {
                 ecb.AddComponent(bullet, new BulletPenetration { Remaining = pen });
+                // ヒット履歴バッファを追加して、当たった敵を記録できるようにする
+                ecb.AddBuffer<HitTarget>(bullet);
             }
 
             // リクエスト消費

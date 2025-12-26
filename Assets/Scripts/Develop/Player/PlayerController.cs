@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviour
         {
             if (_penetrationInstance == null)
             {
-                _penetrationInstance = new PenetrationAbility();
+                _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);
                 _abilityManager.AddPassive(_penetrationInstance);
                 _penetrationAdded = true;
             }
