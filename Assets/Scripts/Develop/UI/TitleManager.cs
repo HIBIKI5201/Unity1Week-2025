@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 /// UI Toolkit の VisualElement（Image コンテナ）を
 /// 時間経過でフェードアニメーションさせるクラス
 /// </summary>
-public sealed class Strawman : MonoBehaviour
+public sealed class TitleManager : MonoBehaviour
 {
     private VisualElement _imageContainer;
     private float _time;
