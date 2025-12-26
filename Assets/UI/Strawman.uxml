@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Strawman.uss?fileID=7433441132597879392&amp;guid=894d57c22e87bfd43b4c32dca728ae40&amp;type=3#Strawman"/>
+    <ui:VisualElement name="image-container" style="flex-grow: 1; width: 100%; -unity-text-align: upper-center; white-space: normal; align-self: auto; justify-content: center; align-items: stretch; align-content: flex-start; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; translate: 1px 8px; padding-right: 0; padding-top: 0; position: absolute; left: 0; top: 0; right: auto; bottom: auto; flex-direction: row; height: 100%; transition-property: opacity; transition-duration: 1s; transition-timing-function: ease; transition-delay: 0s; aspect-ratio: auto; background-image: none; -unity-material: url(&quot;&quot;);">
+        <ui:Label text="GAMESTART
+" style="font-size: 150px; -unity-font-definition: url(&quot;project://database/Assets/Arts/Font/Marchive_Font_1_00/OpenType%20(.otf)/Marchive-Italic.otf?fileID=12800000&amp;guid=e191f857b2ba3a743bc930ace563a22c&amp;type=3#Marchive-Italic&quot;); top: 200px; height: 150px;"/>
+    </ui:VisualElement>
+</ui:UXML>
