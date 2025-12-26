@@ -6,15 +6,6 @@ using UnityEngine;
 /// </summary>
 public class GhostAbility : IActiveAbility
 {
-    private readonly PlayerConfig _config;
-
-    private float _activeTime;
-    private float _coolTime;
-
-    private float _timer;
-    private bool _active;
-    private bool _cooling;
-
     /// <summary>
     /// コンストラクタ。PlayerConfig からタイミング値を初期化。
     /// </summary>
@@ -22,10 +13,14 @@ public class GhostAbility : IActiveAbility
     public GhostAbility(PlayerConfig config)
     {
         _config = config;
-        // null チェックして安全に初期化
-        _activeTime = _config != null ? _config.GhostTime : 3f;
-        _coolTime = _config != null ? _config.GhostAbilityCoolTime : 5f;
+        _cooldownTimer=_config.GhostAbilityCoolTime;
     }
+    private readonly PlayerConfig _config;
+    private float _timer;
+    private float _limitTimer;
+    private float _cooldownTimer;
+    private bool _active;
+    private bool _cooling;
 
     /// <summary>
     /// 発動可能かを返します（現在アクティブでも冷却中でもない場合）。
@@ -33,12 +28,18 @@ public class GhostAbility : IActiveAbility
     public bool CanActivate => !_active && !_cooling;
 
     /// <summary>
+    /// 現在アクティブ状態かどうかを返します（外部から無敵状態のチェックに利用可能）。
+    /// </summary>
+    public bool IsActive => _active;
+
+    /// <summary>
     /// アビリティを発動します。アクティブ時間のカウントを開始。
     /// </summary>
-    public void Activate()
+    public void Activate(float time)
     {
         _active = true;
-        _timer = _activeTime;
+        _timer = time;
+        _limitTimer = time + _config.GhostTime;
     }
 
     /// <summary>
@@ -49,19 +50,15 @@ public class GhostAbility : IActiveAbility
     {
         if (_active)
         {
-            _timer -= dt;
-            if (_timer <= 0f)
+            if (_timer <= _limitTimer)
             {
                 _active = false;
                 _cooling = true;
-                _timer = _coolTime;
             }
         }
-        else if (_cooling)
+        else
         {
-            _timer -= dt;
-            if (_timer <= 0f)
-                _cooling = false;
+
         }
     }
 }

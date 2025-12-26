@@ -29,6 +29,13 @@ public partial struct BulletSpawnSystem : ISystem
                 request.ValueRO.Position
             ));
 
+            // Penetration がある場合は弾にコンポーネントを追加
+            int pen = request.ValueRO.Penetration;
+            if (pen > 0)
+            {
+                ecb.AddComponent(bullet, new BulletPenetration { Remaining = pen });
+            }
+
             // リクエスト消費
             ecb.DestroyEntity(entity);
         }

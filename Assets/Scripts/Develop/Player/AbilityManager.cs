@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーのアクティブおよびパッシブアビリティを管理するコンポーネント。
 /// </summary>
-public class AbilityManager : MonoBehaviour
+public class AbilityManager
 {
     private IActiveAbility _active;
     private readonly List<IPassiveAbility> _passives = new();
@@ -28,12 +28,22 @@ public class AbilityManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 指定のパッシブアビリティを削除（同一インスタンスを比較して削除）。
+    /// </summary>
+    /// <param name="ability">削除するパッシブアビリティ</param>
+    public void RemovePassive(IPassiveAbility ability)
+    {
+        if (ability == null) return;
+        _passives.Remove(ability);
+    }
+
+    /// <summary>
     /// アクティブアビリティを発動。
     /// </summary>
-    public void Activate()
+    public void Activate(float time)
     {
         if (_active?.CanActivate == true)
-            _active.Activate();
+            _active.Activate(time);
     }
 
     /// <summary>
@@ -48,21 +58,15 @@ public class AbilityManager : MonoBehaviour
     /// <summary>
     /// 弾発射時の BulletContext を構築し、登録されたパッシブアビリティに変更を適用する。
     /// </summary>
-    /// <param name="index">弾のインデックス</param>
-    /// <param name="pos">発射位置</param>
-    /// <param name="forward">発射方向（正規化ベクトル）</param>
-    /// <returns>構築された BulletContext</returns>
-    public BulletContext BuildBulletContext(
-        int index,
-        Unity.Mathematics.float3 pos,
-        Unity.Mathematics.float3 forward)
+    public BulletContext BuildBulletContext(int index, Unity.Mathematics.float3 pos, Unity.Mathematics.float3 forward)
     {
         var ctx = new BulletContext
         {
             Index = index,
             Position = pos,
             Forward = forward,
-            Count = 1
+            Count = 1,
+            Penetration = 0
         };
 
         // 各パッシブで発射時のコンテキストを変更する

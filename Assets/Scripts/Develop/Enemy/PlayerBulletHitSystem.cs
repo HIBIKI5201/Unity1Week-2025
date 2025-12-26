@@ -51,8 +51,9 @@ public partial struct PlayerBulletHitSystem : ISystem
                 {
                     totalDamage += bulletData[i].Damage;
                     hitBullet = bulletEntities[i];
-                    ecb.DestroyEntity(bulletEntities[i]);
-                    break;
+                    // ここでは即座に弾を破壊しない（貫通判定は AbilityHitDispatchSystem 側で行う）
+                    //ecb.DestroyEntity(bulletEntities[i]);
+                    //break;
                 }
             }
 

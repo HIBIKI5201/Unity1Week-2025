@@ -7,7 +7,7 @@ public static class BulletShootHelper
     {
         var request = em.CreateEntity();
         em.AddComponentData(request,
-            new BulletSpawnRequest(index, pos, forward));
+            new BulletSpawnRequest(index, pos, forward, 0));
     }
 
     /// <summary>
@@ -26,7 +26,8 @@ public static class BulletShootHelper
                 new BulletSpawnRequest(
                     ctx.Index,
                     ctx.Position,
-                    ctx.Forward
+                    ctx.Forward,
+                    ctx.Penetration
                 ));
         }
     }
