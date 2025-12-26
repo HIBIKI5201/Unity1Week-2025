@@ -107,3 +107,4 @@ MonoBehaviour:
   Speed: 3
   Radius: 1
   BulletType: 0
+  damage: 5
