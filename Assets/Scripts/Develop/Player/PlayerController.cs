@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
         Collider playerCollider = GetComponent<Collider>();
         InitialRegistration();
         _playerMover = new PlayerMover(_config, transform, playerCollider, _camera);
-        _playerAttacker = new PlayerAttacker();
+        _playerAttacker = new PlayerAttacker(_em);
         _playerCollision = new PlayerCollision(_em, transform, _config);
     }
 
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
         if (Mouse.current.leftButton.isPressed)
         {
-            _em.Shoot(0, transform.position, transform.forward);
+            
         }
     }
 
@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
         _inputBuffer.PlayerMove.performed += OnMove;
         _inputBuffer.PlayerMove.canceled += OnMove;
         _inputBuffer.PlayerAttack.started += OnAttack;
+        _inputBuffer.PlayerAbility.started += OnAbility;
     }
 
     private void UnRegistrantion()
@@ -67,6 +68,7 @@ public class PlayerController : MonoBehaviour
         _inputBuffer.PlayerMove.performed -= OnMove;
         _inputBuffer.PlayerMove.canceled -= OnMove;
         _inputBuffer.PlayerAttack.started -= OnAttack;
+        _inputBuffer.PlayerAbility.started -= OnAbility;
     }
 
     private void OnMove(InputAction.CallbackContext context)
@@ -76,6 +78,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnAttack(InputAction.CallbackContext context)
     {
-        _playerAttacker?.OnAttack();
+        _playerAttacker?.OnAttack(0, transform.position, transform.forward);
+    }
+
+    private void OnAbility(InputAction.CallbackContext context)
+    {
+
     }
 }

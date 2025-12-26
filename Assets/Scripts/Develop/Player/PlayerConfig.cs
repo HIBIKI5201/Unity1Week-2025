@@ -8,8 +8,10 @@ public class PlayerConfig : ScriptableObject
     public float AttackSpeed => _attackSpeed;
     public float MoveSpeed => _moveSpeed;
     public float GhostTime => _ghostTime;
+    public float GhostAbilityCoolTime => _ghostAbilityCoolTime;
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _attackSpeed = 1f;
     [SerializeField] private float _collisionRadius = 1.5f;
     [SerializeField] private float _ghostTime = 0.5f;
+    [SerializeField] private float _ghostAbilityCoolTime = 1f;
 }

@@ -1,10 +1,15 @@
+using Unity.Entities;
 using UnityEngine;
 
 public class PlayerAttacker : MonoBehaviour
 {
-    public void OnAttack()
+    public PlayerAttacker(EntityManager em)
     {
-        // 攻撃ロジックをここに実装
-        Debug.Log("Player Attacks!");
+        _em = em;
     }
+    public void OnAttack(int index, Vector3 pos,Vector3 forward)
+    {
+        _em.Shoot(index, pos, forward);
+    }
+    private EntityManager _em;
 }
