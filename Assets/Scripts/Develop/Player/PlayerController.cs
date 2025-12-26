@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
         Collider playerCollider = GetComponent<Collider>();
         InitialRegistration();
         _playerMover = new PlayerMover(_config, transform, playerCollider, _camera);
-        _playerAttacker = new PlayerAttacker(_em);
+        _playerAttacker = new PlayerAttacker(_em,_config);
         _playerCollision = new PlayerCollision(_em, transform, _config);
     }
 
