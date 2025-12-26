@@ -11,19 +11,28 @@ public class AbilityManager
 
     /// <summary>
     /// アクティブアビリティを設定。
+    /// 既に設定されているアクティブは Deactivate() を呼んで安全に停止する。
     /// </summary>
-    /// <param name="ability">設定するアクティブアビリティ</param>
+    /// <param name="ability">設定するアクティブアビリティ（null で解除）</param>
     public void SetActive(IActiveAbility ability)
     {
+        if (_active != null)
+        {
+            // 古いアクティビティを安全に停止してから差し替える
+            _active.Deactivate();
+        }
+
         _active = ability;
     }
 
     /// <summary>
-    /// パッシブアビリティを追加。
+    /// パッシブアビリティを追加。null または既に追加済みのインスタンスは無視する。
     /// </summary>
     /// <param name="ability">追加するパッシブアビリティ</param>
     public void AddPassive(IPassiveAbility ability)
     {
+        if (ability == null) return;
+        if (_passives.Contains(ability)) return;
         _passives.Add(ability);
     }
 
@@ -40,10 +49,10 @@ public class AbilityManager
     /// <summary>
     /// アクティブアビリティを発動。
     /// </summary>
-    public void Activate(float time)
+    public void Activate()
     {
         if (_active?.CanActivate == true)
-            _active.Activate(time);
+            _active.Activate();
     }
 
     /// <summary>

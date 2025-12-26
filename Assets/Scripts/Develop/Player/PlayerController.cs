@@ -18,13 +18,13 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveDirection;
     private EntityManager _em;
 
-    // 実際に追加したインスタンス参照を保持しておく
+    // アビリティインスタンス参照（ゴーストの状態チェックに使う）
     private GhostAbility _ghostInstance;
     private PenetrationAbility _penetrationInstance;
-
-    // 前フレームのフラグ（変更検出用）
+    // ランタイム同期用フラグ
     private bool _prevGhostFlag;
     private bool _prevPenetrationFlag;
+    private bool _penetrationAdded;
 
 
     private void Start()
@@ -33,17 +33,20 @@ public class PlayerController : MonoBehaviour
         _inputBuffer = GetComponent<InputBuffer>();
         Collider playerCollider = GetComponent<Collider>();
         InitialRegistration();
-        _playerMover = new PlayerMover(_config, transform, playerCollider, _camera);
-        _playerAttacker = new PlayerAttacker(_em,_config);
-        _playerCollision = new PlayerCollision(_em, transform, _config);
 
+        // AbilityManager の準備
         _abilityManager = new AbilityManager();
         AbilityBridge.Manager = _abilityManager;
-        // 初期フラグに応じて追加
+
+        // 初期同期（シリアライズ済みフラグに従ってアビリティを追加/設定する）
         SyncAbilities(true);
-        // 初期の前フレーム値を記録
         _prevGhostFlag = _ghostAbilirty;
         _prevPenetrationFlag = _penetrationAbility;
+
+        // 各種ユーティリティを初期化（PlayerCollision にはゴースト判定デリゲートを渡す）
+        _playerMover = new PlayerMover(_config, transform, playerCollider, _camera);
+        _playerAttacker = new PlayerAttacker(_em, _config);
+        _playerCollision = new PlayerCollision(_em, transform, _config, () => _ghostInstance != null && _ghostInstance.IsActive);
     }
 
     private void OnDestroy()
@@ -53,7 +56,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // インスペクタでの切り替えを反映（実行中にオン/オフできる）
+        // Inspector のフラグ変更を検出して同期（ランタイム反映）
         if (_ghostAbilirty != _prevGhostFlag || _penetrationAbility != _prevPenetrationFlag)
         {
             SyncAbilities(false);
@@ -109,32 +112,31 @@ public class PlayerController : MonoBehaviour
     private void OnAbility(InputAction.CallbackContext context)
     {
         // アビリティ発動入力
-        _abilityManager?.Activate(Time.time);
+        _abilityManager?.Activate();
+        // 発動成功（ゴーストがアクティブになった）ならログ出力
+        if (_ghostInstance != null && _ghostInstance.IsActive)
+        {
+            Debug.Log("ゴースト能力を発動しました。");
+        }
     }
 
-    // フラグに基づいてアビリティを追加・削除する（startUp フラグ isStartUp）
+    // フラグに基づいてアビリティを追加・削除する（isStartUp: Start 時は true、ランタイム変更時は false）
     private void SyncAbilities(bool isStartUp)
     {
-        // ゴーストアビリティ
+        // ゴーストアビリティ（アクティブ）
         if (_ghostAbilirty)
         {
             if (_ghostInstance == null)
             {
                 _ghostInstance = new GhostAbility(_config);
-                _abilityManager.SetActive(_ghostInstance);
             }
-            else if (isStartUp)
-            {
-                _abilityManager.SetActive(_ghostInstance);
-            }
+            // 常に AbilityManager に設定して有効化（Start/ランタイムどちらでも）
+            _abilityManager.SetActive(_ghostInstance);
         }
         else
         {
-            if (_ghostInstance != null)
-            {
-                // アクティブ解除
-                _abilityManager.SetActive(null);
-            }
+            // フラグがオフならアクティブを解除
+            _abilityManager.SetActive(null);
         }
 
         // 貫通パッシブ
@@ -144,18 +146,23 @@ public class PlayerController : MonoBehaviour
             {
                 _penetrationInstance = new PenetrationAbility();
                 _abilityManager.AddPassive(_penetrationInstance);
+                _penetrationAdded = true;
             }
-            else if (isStartUp)
+            else if (!_penetrationAdded)
             {
-                // 既に追加済みなら何もしない
+                // 既にインスタンスがあるが未登録なら登録する
+                _abilityManager.AddPassive(_penetrationInstance);
+                _penetrationAdded = true;
             }
+            // isStartUp 特別処理は不要（毎回登録状態を保証する実装）
         }
         else
         {
-            if (_penetrationInstance != null)
+            if (_penetrationAdded && _penetrationInstance != null)
             {
                 _abilityManager.RemovePassive(_penetrationInstance);
-                // インスタンスは保持しておいて再度有効化時に再利用可能とする
+                _penetrationAdded = false;
+                // インスタンスは保持（再利用可能）
             }
         }
     }
