@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 28717412}
   - component: {fileID: 28717411}
   m_Layer: 0
-  m_Name: Strawman
+  m_Name: TitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
