@@ -37,6 +37,7 @@ public partial struct PlayerBulletHitSystem : ISystem
             float enemyRadius = enemyData.ValueRO.Radius;
 
             int totalDamage = 0;
+            Entity hitBullet = Entity.Null;
 
             for (int i = 0; i < bulletEntities.Length; i++)
             {
@@ -49,6 +50,7 @@ public partial struct PlayerBulletHitSystem : ISystem
                 if (distSq <= hitDist * hitDist)
                 {
                     totalDamage += bulletData[i].Damage;
+                    hitBullet = bulletEntities[i];
                     ecb.DestroyEntity(bulletEntities[i]);
                     break;
                 }
@@ -59,6 +61,13 @@ public partial struct PlayerBulletHitSystem : ISystem
                 ecb.AddComponent(enemyEntity, new DamageEvent
                 {
                     Value = totalDamage
+                });
+
+                ecb.AddComponent(enemyEntity, new HitEvent
+                {
+                    Bullet = hitBullet,
+                    Target = enemyEntity,
+                    Position = enemyPos
                 });
             }
         }

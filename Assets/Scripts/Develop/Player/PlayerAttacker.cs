@@ -1,17 +1,18 @@
 using Unity.Entities;
 using UnityEngine;
 
-public class PlayerAttacker : MonoBehaviour
+public class PlayerAttacker
 {
     public PlayerAttacker(EntityManager em, PlayerConfig config)
     {
         _em = em;
         _config = config;
     }
-    public void OnAttack(int index, Vector3 pos,Vector3 forward)
+
+    public void OnAttack(in BulletContext ctx)
     {
         //todo:後で銃のクールタイム追加
-        _em.Shoot(index, pos, forward);
+        _em.Shoot(ctx);
     }
 
     public void OnUpdate()

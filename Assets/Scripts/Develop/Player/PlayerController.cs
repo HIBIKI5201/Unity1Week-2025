@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private PlayerMover _playerMover;
     private PlayerAttacker _playerAttacker;
     private PlayerCollision _playerCollision;
+    private AbilityManager _abilityManager;
     private Vector2 _moveDirection;
     private EntityManager _em;
 
@@ -25,6 +26,9 @@ public class PlayerController : MonoBehaviour
         _playerMover = new PlayerMover(_config, transform, playerCollider, _camera);
         _playerAttacker = new PlayerAttacker(_em,_config);
         _playerCollision = new PlayerCollision(_em, transform, _config);
+        _abilityManager = new AbilityManager();
+        _abilityManager.AddPassive(new PenetrationAbility());
+        AbilityBridge.Manager = _abilityManager;
     }
 
     private void OnDestroy()
@@ -34,12 +38,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        // アビリティの時間経過処理を毎フレーム呼ぶ
+        _abilityManager?.Tick(Time.deltaTime);
         _playerMover.OnMove(_moveDirection, _cameraMover.ScrollVelocity, Time.deltaTime);
-
-        if (Mouse.current.leftButton.isPressed)
-        {
-            
-        }
     }
 
     private void LateUpdate()
@@ -78,11 +79,13 @@ public class PlayerController : MonoBehaviour
 
     private void OnAttack(InputAction.CallbackContext context)
     {
-        _playerAttacker?.OnAttack(0, transform.position, transform.forward);
+        var ctx = _abilityManager.BuildBulletContext(0, transform.position, transform.forward);
+        _playerAttacker?.OnAttack(ctx);
     }
 
     private void OnAbility(InputAction.CallbackContext context)
     {
-
+        // アビリティ発動入力
+        _abilityManager?.Activate(Time.time);
     }
 }
