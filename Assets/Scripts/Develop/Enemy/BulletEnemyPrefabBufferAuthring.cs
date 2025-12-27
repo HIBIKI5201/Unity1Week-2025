@@ -17,7 +17,6 @@ public class BulletEnemyPrefabBufferAuthring : MonoBehaviour
             // GameObject プレハブから Entity プレハブを取得して追加
             foreach (var prefab in authoring.bulletPrefabs)
             {
-                Debug.Log($"{prefab.name}を追加");
                 buffer.Add(new BulletEnemyPrefabElement
                 {
                     Prefab = GetEntity(prefab, TransformUsageFlags.Dynamic),
