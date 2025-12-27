@@ -18,3 +18,4 @@ MonoBehaviour:
   _ghostTime: 5
   _ghostAbilityCoolTime: 1
   _penetrationCount: 2
+  _titleName: MasterTitle

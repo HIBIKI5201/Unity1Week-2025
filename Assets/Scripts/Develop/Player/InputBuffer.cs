@@ -22,6 +22,14 @@ public class InputBuffer : MonoBehaviour
             _playerMove = playerInput.actions[PLAYER_MOVE];
             _playerAttack = playerInput.actions[PLAYER_ATTACK];
             _playerAbility = playerInput.actions[PLAYER_ABILITY];
+            if(_playerMove == null || _playerAttack == null || _playerAbility == null)
+            {
+                Debug.LogError("指定されたInputActionが見つかりませんでした。");
+            }
+        }
+        else
+        {
+            Debug.LogError("PlayerInputコンポーネントが見つかりませんでした。");
         }
     }
 }

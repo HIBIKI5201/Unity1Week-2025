@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_playerCollision.LateUpdate())
         {
+            Debug.Log("プレイヤーが死亡しました。");
             _playerDead?.OnDead();
         }
     }
@@ -92,6 +93,7 @@ public class PlayerController : MonoBehaviour
         _inputBuffer.PlayerMove.canceled += OnMove;
         _inputBuffer.PlayerAttack.started += OnAttack;
         _inputBuffer.PlayerAbility.started += OnAbility;
+        Debug.Log("Input登録完了");
     }
 
     private void UnRegistrantion()
@@ -105,6 +107,7 @@ public class PlayerController : MonoBehaviour
     private void OnMove(InputAction.CallbackContext context)
     {
         _moveDirection = context.ReadValue<Vector2>();
+        Debug.Log($"移動入力: {_moveDirection}");
     }
 
     private void OnAttack(InputAction.CallbackContext context)
