@@ -1,0 +1,32 @@
+:root {
+}
+
+.actionButton {
+    font-size: 30px;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    transition-property: opacity;
+    transition-duration: 1s;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    width: auto;
+    height: auto;
+    display: flex;
+    opacity: 1;
+}
+
+.actionButton:hover {
+    scale: 1.2 1.2;
+    transition-property: scale, opacity;
+    transition-timing-function: ease-in-out-bounce, ease;
+    transition-duration: 0.2s, 0.2s;
+    opacity: 0;
+}
+
+.actionButton.selected {
+    scale: 1.5 1.5;
+}
