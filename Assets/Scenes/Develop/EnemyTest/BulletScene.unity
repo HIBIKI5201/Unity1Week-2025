@@ -147,6 +147,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bullet
       objectReference: {fileID: 0}
+    - target: {fileID: 2205264551715169741, guid: 45bcaf47f52c88f4b94ca23879be01b7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8292710652214103155, guid: 45bcaf47f52c88f4b94ca23879be01b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10
