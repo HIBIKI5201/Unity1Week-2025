@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayerConfig
   _moveSpeed: 5
-  _collisionRadius: 3
+  _attackSpeed: 1
+  _collisionRadius: 1
+  _ghostTime: 5
+  _ghostAbilityCoolTime: 1
+  _penetrationCount: 2

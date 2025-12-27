@@ -1,3 +1,4 @@
+using System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -9,11 +10,12 @@ public struct Hit : IComponentData { }
 
 public class PlayerCollision
 {
-    public PlayerCollision(EntityManager em, Transform transform, PlayerConfig config)
+    public PlayerCollision(EntityManager em, Transform transform, PlayerConfig config, Func<bool> isGhostActive = null)
     {
         _transform = transform;
         _entityManager = em;
         _config = config;
+        _isGhostActive = isGhostActive;
         _bulletQuery = _entityManager.CreateEntityQuery(
             ComponentType.ReadOnly<BulletEntity>(),
             ComponentType.ReadOnly<EnemyBullet>(),
@@ -26,9 +28,16 @@ public class PlayerCollision
     private Transform _transform;
     private EntityManager _entityManager;
     private EntityQuery _bulletQuery;
+    private readonly Func<bool> _isGhostActive;
 
     public bool LateUpdate()
     {
+        // ゴースト（無敵）なら当たり判定をスキップする
+        if (_isGhostActive != null && _isGhostActive())
+        {
+            return false;
+        }
+
         int count = _bulletQuery.CalculateEntityCount();
         if (count == 0) return false;
         //バレットのデータを取得
