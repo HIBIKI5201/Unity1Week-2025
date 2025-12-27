@@ -55,7 +55,6 @@ public class EnemyManager : MonoBehaviour
         {
             Id = _id,
             Position = transform.position,
-            Forward = transform.forward,
         };
         BulletShootHelper.ShootEnemy(_em, enemyContext);
     }
