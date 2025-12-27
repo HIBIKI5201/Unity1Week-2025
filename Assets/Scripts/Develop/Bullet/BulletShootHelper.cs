@@ -10,6 +10,25 @@ public static class BulletShootHelper
             new BulletSpawnRequest(index, pos, forward, 0));
     }
 
+    public static void ShootEnemy(this EntityManager em, int enemyId, float3 pos, float3 forward)
+    {
+        var request = em.CreateEntity();
+        em.AddComponentData(request,
+            new EnemyBulletSpawnRequest(enemyId, pos, forward));
+    }
+
+    public static void ShootEnemy(this EntityManager em, EnemyBulletContext ctx)
+    {
+        // エンティティを作成して各リクエストを追加。
+        var request = em.CreateEntity();
+        em.AddComponentData(request,
+            new EnemyBulletSpawnRequest(
+                ctx.Id,
+                ctx.Position,
+                ctx.Forward
+            ));
+    }
+
     /// <summary>
     /// BulletContext に基づいて複数（ctx.Count）の弾発射リクエストを作成。
     /// </summary>

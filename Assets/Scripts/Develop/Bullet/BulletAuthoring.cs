@@ -8,6 +8,7 @@ public class BulletAuthoring : MonoBehaviour
     public float Radius;
     public BulletType BulletType;
     public int damage;
+    public int EnemyId;
 
     class Baker : Baker<BulletAuthoring>
     {
@@ -32,7 +33,10 @@ public class BulletAuthoring : MonoBehaviour
                     break;
 
                 case BulletType.Enemy:
-                    AddComponent<EnemyBullet>(entity);
+                    AddComponent(entity,new EnemyBullet
+                    {
+                        Id = authoring.EnemyId
+                    });
                     break;
             }
         }
