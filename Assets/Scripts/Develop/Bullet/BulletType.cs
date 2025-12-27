@@ -19,4 +19,5 @@ public struct PlayerBullet : IComponentData
 /// </summary>
 public struct EnemyBullet : IComponentData
 {
+    public int Id;
 }
