@@ -1,3 +1,4 @@
+using SymphonyFrameWork.System;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private PlayerMover _playerMover;
     private PlayerAttacker _playerAttacker;
     private PlayerCollision _playerCollision;
+    private PlayerDead _playerDead;
     private AbilityManager _abilityManager;
     private Vector2 _moveDirection;
     private EntityManager _em;
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
         _playerMover = new PlayerMover(_config, transform, playerCollider, _camera);
         _playerAttacker = new PlayerAttacker(_em, _config);
         _playerCollision = new PlayerCollision(_em, transform, _config, () => _ghostInstance != null && _ghostInstance.IsActive);
+        _playerDead = new PlayerDead(_config);
     }
 
     private void OnDestroy()
@@ -79,13 +82,8 @@ public class PlayerController : MonoBehaviour
     {
         if (_playerCollision.LateUpdate())
         {
-            Dead();
+            _playerDead?.OnDead();
         }
-    }
-
-    private void Dead()
-    {
-        Debug.Log("Dead");
     }
 
     private void InitialRegistration()
