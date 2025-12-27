@@ -5,7 +5,12 @@ using UnityEngine;
 public class CameraMover : MonoBehaviour
 {
     public Vector3 ScrollVelocity { get; private set; }
-    [SerializeField] private float _moveSpeed = 2f;
+    private float _moveSpeed = 0f;
+
+    public void Init(float speed)
+    {
+        _moveSpeed = speed;
+    }
 
     void Update()
     {

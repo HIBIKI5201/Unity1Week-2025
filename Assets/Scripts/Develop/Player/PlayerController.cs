@@ -5,11 +5,11 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(InputBuffer))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private PlayerConfig _config;
-    [SerializeField] private Camera _camera;
-    [SerializeField] private CameraMover _cameraMover;
     [SerializeField] private bool _ghostAbilirty;
     [SerializeField] private bool _penetrationAbility;
+    private PlayerConfig _config;
+    private Camera _camera;
+    private CameraMover _cameraMover;
     private InputBuffer _inputBuffer;
     private PlayerMover _playerMover;
     private PlayerAttacker _playerAttacker;
@@ -26,6 +26,12 @@ public class PlayerController : MonoBehaviour
     private bool _prevPenetrationFlag;
     private bool _penetrationAdded;
 
+    public void Init(PlayerConfig config, Camera camera, CameraMover cameraMover)
+    {
+        _config = config;
+        _camera = camera;
+        _cameraMover = cameraMover;
+    }
 
     private void Start()
     {
