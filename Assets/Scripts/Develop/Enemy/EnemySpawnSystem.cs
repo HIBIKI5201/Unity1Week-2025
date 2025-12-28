@@ -18,6 +18,7 @@ public partial struct EnemySpawnSystem : ISystem
                  in SystemAPI.Query<RefRO<EnemyBulletSpawnRequest>>()
                      .WithEntityAccess())
         {
+            // リクエストから ID を取得
             int id = request.ValueRO.Id;
 
             Entity prefab = Entity.Null;
@@ -32,7 +33,7 @@ public partial struct EnemySpawnSystem : ISystem
                 }
             }
 
-// Prefab が見つかった場合のみ Entity を生成する
+            // Prefab が見つかった場合のみ Entity を生成する
             if (prefab != Entity.Null)
             {
                 // EntityCommandBuffer を使って弾 Entity を生成する
