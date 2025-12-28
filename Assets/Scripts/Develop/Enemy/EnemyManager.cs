@@ -73,11 +73,11 @@ public struct EnemyEntity : IComponentData
     public int Id;
 }
 
-public struct HealthEntity : IComponentData
-{
-    public int Value;
-}
+
 
 public struct DeadEvent : IComponentData
 {
 }
+
+
+
