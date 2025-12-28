@@ -11,8 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _penetrationAbility;
 
     [Header("Repository マッピング (敵ID を指定)")]
-    private int _ghostSourceEnemyId = -1;
-    private int _penetrationSourceEnemyId = -1;
+    [SerializeField] private AbilityMap _abilityMap;
 
     private PlayerConfig _config;
     private Camera _camera;
@@ -57,9 +56,17 @@ public class PlayerController : MonoBehaviour
         _abilityManager = new AbilityManager();
         AbilityBridge.Manager = _abilityManager;
 
-        // ServiceLocator から AbilityRepository を取得（System 側で登録されている前提）
-        if (!ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository))
-            _abilityRepository = null;
+        // ServiceLocator から AbilityRepository を取得
+        ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository);
+
+        // ScriptableObject のマップがセットされているならリポジトリに登録（起動時）
+        if (_abilityMap != null && _abilityRepository != null && _abilityMap.Entries != null)
+        {
+            foreach (var e in _abilityMap.Entries)
+            {
+                _abilityRepository.RegisterMapping(e.EnemyId, e.Ability);
+            }
+        }
 
         // 初期同期（シリアライズ済みフラグに従ってアビリティを追加/設定する）
         SyncAbilities(true);
@@ -189,36 +196,48 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// AbilityRepository からマッピングされたアビリティを取得して適用する。
+    /// </summary>
     private void ApplyRepositoryAbilities()
     {
-        if (_abilityRepository == null && _abilityRepository == null)
-        {
-            // もしシステムに別名で登録されている場合に備え、ServiceLocator から取得しておく
+        if (_abilityRepository == null)
             ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository);
-        }
 
         if (_abilityRepository == null) return;
 
-        // ゴースト能力：指定された敵IDからヒット登録があれば一度だけ付与
-        if (!_repoGhostApplied && _ghostSourceEnemyId >= 0 && _abilityRepository.HasRegistered(_ghostSourceEnemyId))
-        {
-            if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config);
-            _abilityManager.SetActive(_ghostInstance);
-            _repoGhostApplied = true;
-            Debug.Log($"Repository によりゴースト能力を付与（敵ID: {_ghostSourceEnemyId}）");
-        }
+        var abilities = _abilityRepository.GetAndConsumeMappedAbilities();
+        if (abilities == null || abilities.Count == 0) return;
 
-        // 貫通能力：指定された敵IDからヒット登録があれば一度だけパッシブ追加
-        if (!_repoPenetrationApplied && _penetrationSourceEnemyId >= 0 && _abilityRepository.HasRegistered(_penetrationSourceEnemyId))
+        foreach (var a in abilities)
         {
-            if (_penetrationInstance == null) _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);
-            if (!_penetrationAdded)
+            switch (a)
             {
-                _abilityManager.AddPassive(_penetrationInstance);
-                _penetrationAdded = true;
+                case AbilityType.Ghost:
+                    if (!_repoGhostApplied)
+                    {
+                        if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config);
+                        _abilityManager.SetActive(_ghostInstance);
+                        _repoGhostApplied = true;
+                        Debug.Log("Repository によりゴースト能力を付与");
+                    }
+                    break;
+                case AbilityType.Penetration:
+                    if (!_repoPenetrationApplied)
+                    {
+                        if (_penetrationInstance == null) _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);
+                        if (!_penetrationAdded)
+                        {
+                            _abilityManager.AddPassive(_penetrationInstance);
+                            _penetrationAdded = true;
+                        }
+                        _repoPenetrationApplied = true;
+                        Debug.Log("Repository により貫通能力を付与");
+                    }
+                    break;
+                default:
+                    break;
             }
-            _repoPenetrationApplied = true;
-            Debug.Log($"Repository により貫通能力を付与（敵ID: {_penetrationSourceEnemyId}）");
         }
     }
 }

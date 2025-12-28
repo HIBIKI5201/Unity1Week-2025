@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "AbilityMap", menuName = "Game/AbilityMap")]
+[CreateAssetMenu(fileName = "AbilityMap", menuName = "ScriptableObjects/AbilityMap", order = 0)]
 public class AbilityMap : ScriptableObject
 {
     public AbilityEntry[] Entries;

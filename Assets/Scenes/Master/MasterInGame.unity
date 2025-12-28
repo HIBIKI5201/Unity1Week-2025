@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   _radius: 0.5
   _health: 10
-  _id: 10001
+  _id: 10003
 --- !u!23 &162702379
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -254,15 +254,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45a335734b1572644a6a5d09d87adc65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Scenes::Unity.Scenes.SubScene
-  _SceneAsset: {fileID: 102900000, guid: 2c2057dad6b17b54f88e341256da45eb, type: 3}
+  _SceneAsset: {fileID: 102900000, guid: a86afe62cfecbd7439a8607ec2f3bbc0, type: 3}
   _HierarchyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   AutoLoadScene: 1
   _SceneGUID:
     Value:
-      x: 2910126786
-      y: 1169628013
-      z: 558098575
-      w: 3193220453
+      x: 653239946
+      y: 1205587708
+      z: 3875965587
+      w: 213597996
 --- !u!4 &384958643
 Transform:
   m_ObjectHideFlags: 0
@@ -311,7 +311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   _radius: 0.5
   _health: 10
-  _id: 10001
+  _id: 10003
 --- !u!23 &602515212
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -417,7 +417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   _radius: 0.5
   _health: 10
-  _id: 10001
+  _id: 10002
 --- !u!23 &645140913
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -737,6 +737,7 @@ MonoBehaviour:
   _config: {fileID: 11400000, guid: f0701e4ac34ed2a4d9aefa8e3a0de39c, type: 2}
   _cameraMover: {fileID: 867401957}
   _playerController: {fileID: 1599133849}
+  _abilityMap: {fileID: 0}
   _cameraMoveSpeed: 0
 --- !u!4 &1383980981
 Transform:
@@ -862,8 +863,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 003df57bf349a2e4182383c65955a69b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  _ghostAbilirty: 1
-  _penetrationAbility: 1
+  _ghostAbilirty: 0
+  _penetrationAbility: 0
+  _abilityMap: {fileID: 11400000, guid: 0aaf77b42bd26eb45ac3808bacb47062, type: 2}
 --- !u!114 &1599133850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -983,7 +985,7 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: df70fa95-8a34-4494-b137-73ab6b9c7d37
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!135 &1599133852

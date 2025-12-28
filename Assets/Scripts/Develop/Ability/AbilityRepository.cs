@@ -1,69 +1,78 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AbilityRepository
+public class AbilityRepository　: MonoBehaviour 
 {
     private readonly object _sync = new();
-    private readonly Dictionary<int, bool> _hitAbility = new();
+    private readonly HashSet<int> _registered = new();
+    private readonly HashSet<int> _consumed = new();
+    private readonly Dictionary<int, AbilityType> _mapping = new();
 
     /// <summary>
-    /// 敵ID に対して「一度だけ」ヒット登録します。
-    /// 既に登録済みなら false を返し、未登録なら登録して true を返します。
+    /// 初回ヒットのみ登録する（既に登録/消費済みなら false）。
     /// </summary>
     public bool RegisterHitOnce(int enemyId)
     {
         lock (_sync)
         {
-            if (_hitAbility.ContainsKey(enemyId))
+            if (_registered.Contains(enemyId) || _consumed.Contains(enemyId))
                 return false;
 
-            _hitAbility[enemyId] = true;
+            _registered.Add(enemyId);
             return true;
         }
     }
 
+    /// <summary>
+    /// enemyId -> AbilityType のマッピングを登録（起動時に ScriptableObject から呼ぶ）。
+    /// </summary>
+    public void RegisterMapping(int enemyId, AbilityType ability)
+    {
+        lock (_sync)
+        {
+            _mapping[enemyId] = ability;
+        }
+    }
 
     /// <summary>
-    /// 指定の敵ID が既に登録されているかを返します。
+    /// 未消費の登録済み enemyId をマッピングに従って列挙し、消費済みにマークして返す（1回限り）。
+    /// </summary>
+    public List<AbilityType> GetAndConsumeMappedAbilities()
+    {
+        lock (_sync)
+        {
+            var result = new List<AbilityType>();
+            foreach (var id in _registered)
+            {
+                if (_consumed.Contains(id)) continue;
+                if (_mapping.TryGetValue(id, out var ability) && ability != AbilityType.None)
+                {
+                    result.Add(ability);
+                }
+                _consumed.Add(id);
+            }
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// 登録済み（履歴）を持っているか（反映済み／未反映を含む）。
     /// </summary>
     public bool HasRegistered(int enemyId)
     {
         lock (_sync)
         {
-            return _hitAbility.ContainsKey(enemyId);
+            return _registered.Contains(enemyId) || _consumed.Contains(enemyId);
         }
     }
 
-    /// <summary>
-    /// 登録済みの敵ID の読み取り用コピーを返します。
-    /// </summary>
-    public IReadOnlyCollection<int> Snapshot()
-    {
-        lock (_sync)
-        {
-            return new List<int>(_hitAbility.Keys);
-        }
-    }
-
-    /// <summary>
-    /// 指定の敵ID の登録を解除します（必要なら）。
-    /// </summary>
-    public bool Remove(int enemyId)
-    {
-        lock (_sync)
-        {
-            return _hitAbility.Remove(enemyId);
-        }
-    }
-
-    /// <summary>
-    /// 全登録をクリアします。
-    /// </summary>
     public void Clear()
     {
         lock (_sync)
         {
-            _hitAbility.Clear();
+            _registered.Clear();
+            _consumed.Clear();
+            _mapping.Clear();
         }
     }
 }

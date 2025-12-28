@@ -1,6 +1,5 @@
 using SymphonyFrameWork.System;
 using System;
-using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -10,8 +9,7 @@ using UnityEngine;
 
 public struct PlayerHitResult : IComponentData
 {
-    public bool IsHit;
-    public HashSet<int> EnemyIds;
+    // マーカーコンポーネント（IComponentData に参照型を含めない）
 }
 
 public class PlayerCollision
@@ -49,7 +47,7 @@ public class PlayerCollision
     private EntityQuery _bulletQuery;
     private EntityQuery _enemyQuery;
     private readonly Func<bool> _isGhostActive;
-    private readonly AbilityRepository _abilityRepository;
+    private AbilityRepository _abilityRepository;
 
     public bool LateUpdate()
     {
