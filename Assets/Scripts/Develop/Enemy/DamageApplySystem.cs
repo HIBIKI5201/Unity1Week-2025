@@ -24,7 +24,6 @@ public partial struct DamageApplySystem : ISystem
 
             HealthEntity healthEntity = entityManager.GetComponentData<HealthEntity>(healthEntityRef);
             int first = healthEntity.Value;
-            if(first <= 0) return;
             healthEntity.Value -= damage.ValueRO.Value;
             entityManager.SetComponentData(healthEntityRef, healthEntity);
             if (healthEntity.Value <= 0)

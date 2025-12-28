@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
@@ -6,10 +7,15 @@ using UnityEngine;
 /// </summary>
 public sealed class EnemyHealthCreate : MonoBehaviour
 {
+    public void RegisterEnemy(Entity e)
+    {
+        _enemyEntities.Add(e);
+    }
+
     [SerializeField] private int _healthValue = 100;
 
     public Entity HealthEntity => _healthEntity;
-
+    private List<Entity> _enemyEntities = new();
     private Entity _healthEntity;
     private EntityManager _entityManager;
 
@@ -26,17 +32,16 @@ public sealed class EnemyHealthCreate : MonoBehaviour
         });
     }
 
+
     private void OnDestroy()
     {
-        if (!World.DefaultGameObjectInjectionWorld.IsCreated)
+        if (!World.DefaultGameObjectInjectionWorld.IsCreated) return;
+        foreach (var e in _enemyEntities)
         {
-            return;
+            if (_entityManager.Exists(e))
+                _entityManager.DestroyEntity(e);
         }
 
-        if (_entityManager.Exists(_healthEntity))
-        {
-           _entityManager.DestroyEntity(_healthEntity);
-        }
+        _enemyEntities.Clear();
     }
-
 }
