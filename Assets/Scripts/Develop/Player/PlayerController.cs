@@ -6,8 +6,14 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(InputBuffer))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Inspector フラグ（手動付与）")]
     [SerializeField] private bool _ghostAbilirty;
     [SerializeField] private bool _penetrationAbility;
+
+    [Header("Repository マッピング (敵ID を指定)")]
+    private int _ghostSourceEnemyId = -1;
+    private int _penetrationSourceEnemyId = -1;
+
     private PlayerConfig _config;
     private Camera _camera;
     private CameraMover _cameraMover;
@@ -17,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private PlayerCollision _playerCollision;
     private PlayerDead _playerDead;
     private AbilityManager _abilityManager;
+    private AbilityRepository _abilityRepository;
     private Vector2 _moveDirection;
     private EntityManager _em;
 
@@ -27,6 +34,10 @@ public class PlayerController : MonoBehaviour
     private bool _prevGhostFlag;
     private bool _prevPenetrationFlag;
     private bool _penetrationAdded;
+
+    // Repository 連携用
+    private bool _repoGhostApplied;
+    private bool _repoPenetrationApplied;
 
     public void Init(PlayerConfig config, Camera camera, CameraMover cameraMover)
     {
@@ -45,6 +56,10 @@ public class PlayerController : MonoBehaviour
         // AbilityManager の準備
         _abilityManager = new AbilityManager();
         AbilityBridge.Manager = _abilityManager;
+
+        // ServiceLocator から AbilityRepository を取得（System 側で登録されている前提）
+        if (!ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository))
+            _abilityRepository = null;
 
         // 初期同期（シリアライズ済みフラグに従ってアビリティを追加/設定する）
         SyncAbilities(true);
@@ -72,7 +87,7 @@ public class PlayerController : MonoBehaviour
             _prevGhostFlag = _ghostAbilirty;
             _prevPenetrationFlag = _penetrationAbility;
         }
-
+        ApplyRepositoryAbilities();
         // アビリティの時間経過処理を毎フレーム呼ぶ
         _abilityManager?.Tick(Time.deltaTime);
         _playerMover.OnMove(_moveDirection, _cameraMover.ScrollVelocity, Time.deltaTime);
@@ -171,6 +186,39 @@ public class PlayerController : MonoBehaviour
                 _penetrationAdded = false;
                 // インスタンスは保持（再利用可能）
             }
+        }
+    }
+
+    private void ApplyRepositoryAbilities()
+    {
+        if (_abilityRepository == null && _abilityRepository == null)
+        {
+            // もしシステムに別名で登録されている場合に備え、ServiceLocator から取得しておく
+            ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository);
+        }
+
+        if (_abilityRepository == null) return;
+
+        // ゴースト能力：指定された敵IDからヒット登録があれば一度だけ付与
+        if (!_repoGhostApplied && _ghostSourceEnemyId >= 0 && _abilityRepository.HasRegistered(_ghostSourceEnemyId))
+        {
+            if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config);
+            _abilityManager.SetActive(_ghostInstance);
+            _repoGhostApplied = true;
+            Debug.Log($"Repository によりゴースト能力を付与（敵ID: {_ghostSourceEnemyId}）");
+        }
+
+        // 貫通能力：指定された敵IDからヒット登録があれば一度だけパッシブ追加
+        if (!_repoPenetrationApplied && _penetrationSourceEnemyId >= 0 && _abilityRepository.HasRegistered(_penetrationSourceEnemyId))
+        {
+            if (_penetrationInstance == null) _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);
+            if (!_penetrationAdded)
+            {
+                _abilityManager.AddPassive(_penetrationInstance);
+                _penetrationAdded = true;
+            }
+            _repoPenetrationApplied = true;
+            Debug.Log($"Repository により貫通能力を付与（敵ID: {_penetrationSourceEnemyId}）");
         }
     }
 }

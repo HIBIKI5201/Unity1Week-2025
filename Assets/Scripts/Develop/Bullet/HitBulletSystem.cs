@@ -23,7 +23,7 @@ public partial struct HitBulletSystem : ISystem
 
         foreach (var (transform, bullet, entity) in
                  SystemAPI.Query<RefRO<LocalTransform>, RefRO<BulletEntity>>()
-                     .WithAll<Hit>()
+                     .WithAll<PlayerHitResult>()
                      .WithEntityAccess())
         {
             ecb.DestroyEntity(entity);
