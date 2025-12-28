@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3191061791727591012}
   - component: {fileID: -4102652153208108966}
   m_Layer: 0
-  m_Name: EnemyBullet 1
+  m_Name: EnemyBullet 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,4 +108,4 @@ MonoBehaviour:
   Radius: 1
   BulletType: 1
   damage: 5
-  EnemyId: 10002
+  EnemyId: 10001
