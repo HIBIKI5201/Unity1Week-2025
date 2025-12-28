@@ -2,7 +2,7 @@ using Unity.Entities;
 using Unity.Transforms;
 
 [UpdateInGroup(typeof(SimulationSystemGroup))]
-public partial struct EnemySpawnSystem : ISystem
+public partial struct EnemyBulletSpawnSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)
     {
