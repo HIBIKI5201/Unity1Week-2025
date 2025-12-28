@@ -1,3 +1,4 @@
+using SymphonyFrameWork.System;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,8 +6,13 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(InputBuffer))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Inspector フラグ（手動付与）")]
     [SerializeField] private bool _ghostAbilirty;
     [SerializeField] private bool _penetrationAbility;
+
+    [Header("Repository マッピング (敵ID を指定)")]
+    [SerializeField] private AbilityMap _abilityMap;
+
     private PlayerConfig _config;
     private Camera _camera;
     private CameraMover _cameraMover;
@@ -14,7 +20,9 @@ public class PlayerController : MonoBehaviour
     private PlayerMover _playerMover;
     private PlayerAttacker _playerAttacker;
     private PlayerCollision _playerCollision;
+    private PlayerDead _playerDead;
     private AbilityManager _abilityManager;
+    private AbilityRepository _abilityRepository;
     private Vector2 _moveDirection;
     private EntityManager _em;
 
@@ -25,6 +33,10 @@ public class PlayerController : MonoBehaviour
     private bool _prevGhostFlag;
     private bool _prevPenetrationFlag;
     private bool _penetrationAdded;
+
+    // Repository 連携用
+    private bool _repoGhostApplied;
+    private bool _repoPenetrationApplied;
 
     public void Init(PlayerConfig config, Camera camera, CameraMover cameraMover)
     {
@@ -44,6 +56,18 @@ public class PlayerController : MonoBehaviour
         _abilityManager = new AbilityManager();
         AbilityBridge.Manager = _abilityManager;
 
+        // ServiceLocator から AbilityRepository を取得
+        ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository);
+
+        // ScriptableObject のマップがセットされているならリポジトリに登録（起動時）
+        if (_abilityMap != null && _abilityRepository != null && _abilityMap.Entries != null)
+        {
+            foreach (var e in _abilityMap.Entries)
+            {
+                _abilityRepository.RegisterMapping(e.EnemyId, e.Ability);
+            }
+        }
+
         // 初期同期（シリアライズ済みフラグに従ってアビリティを追加/設定する）
         SyncAbilities(true);
         _prevGhostFlag = _ghostAbilirty;
@@ -53,6 +77,7 @@ public class PlayerController : MonoBehaviour
         _playerMover = new PlayerMover(_config, transform, playerCollider, _camera);
         _playerAttacker = new PlayerAttacker(_em, _config);
         _playerCollision = new PlayerCollision(_em, transform, _config, () => _ghostInstance != null && _ghostInstance.IsActive);
+        _playerDead = new PlayerDead(_config);
     }
 
     private void OnDestroy()
@@ -69,7 +94,7 @@ public class PlayerController : MonoBehaviour
             _prevGhostFlag = _ghostAbilirty;
             _prevPenetrationFlag = _penetrationAbility;
         }
-
+        ApplyRepositoryAbilities();
         // アビリティの時間経過処理を毎フレーム呼ぶ
         _abilityManager?.Tick(Time.deltaTime);
         _playerMover.OnMove(_moveDirection, _cameraMover.ScrollVelocity, Time.deltaTime);
@@ -79,13 +104,9 @@ public class PlayerController : MonoBehaviour
     {
         if (_playerCollision.LateUpdate())
         {
-            Dead();
+            Debug.Log("プレイヤーが死亡しました。");
+            _playerDead?.OnDead();
         }
-    }
-
-    private void Dead()
-    {
-        Debug.Log("Dead");
     }
 
     private void InitialRegistration()
@@ -94,6 +115,7 @@ public class PlayerController : MonoBehaviour
         _inputBuffer.PlayerMove.canceled += OnMove;
         _inputBuffer.PlayerAttack.started += OnAttack;
         _inputBuffer.PlayerAbility.started += OnAbility;
+        Debug.Log("Input登録完了");
     }
 
     private void UnRegistrantion()
@@ -107,6 +129,7 @@ public class PlayerController : MonoBehaviour
     private void OnMove(InputAction.CallbackContext context)
     {
         _moveDirection = context.ReadValue<Vector2>();
+        Debug.Log($"移動入力: {_moveDirection}");
     }
 
     private void OnAttack(InputAction.CallbackContext context)
@@ -169,6 +192,51 @@ public class PlayerController : MonoBehaviour
                 _abilityManager.RemovePassive(_penetrationInstance);
                 _penetrationAdded = false;
                 // インスタンスは保持（再利用可能）
+            }
+        }
+    }
+
+    /// <summary>
+    /// AbilityRepository からマッピングされたアビリティを取得して適用する。
+    /// </summary>
+    private void ApplyRepositoryAbilities()
+    {
+        if (_abilityRepository == null)
+            ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository);
+
+        if (_abilityRepository == null) return;
+
+        var abilities = _abilityRepository.GetAndConsumeMappedAbilities();
+        if (abilities == null || abilities.Count == 0) return;
+
+        foreach (var a in abilities)
+        {
+            switch (a)
+            {
+                case AbilityType.Ghost:
+                    if (!_repoGhostApplied)
+                    {
+                        if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config);
+                        _abilityManager.SetActive(_ghostInstance);
+                        _repoGhostApplied = true;
+                        Debug.Log("Repository によりゴースト能力を付与");
+                    }
+                    break;
+                case AbilityType.Penetration:
+                    if (!_repoPenetrationApplied)
+                    {
+                        if (_penetrationInstance == null) _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);
+                        if (!_penetrationAdded)
+                        {
+                            _abilityManager.AddPassive(_penetrationInstance);
+                            _penetrationAdded = true;
+                        }
+                        _repoPenetrationApplied = true;
+                        Debug.Log("Repository により貫通能力を付与");
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
