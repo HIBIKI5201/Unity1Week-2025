@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private float _radius;
-    [SerializeField] private int _health = 10;
+    [SerializeField] private EnemyHealthCreate _healthCreate;
 
     [SerializeField] private int _id;
     private Entity _entity;
@@ -15,17 +15,13 @@ public class EnemyManager : MonoBehaviour
     void Start()
     {
         _em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        _entity = _em.CreateEntity(typeof(LocalTransform));
+        _em.AddComponentData(_entity, new EnemyEntity { Radius = _radius, Id = _id });
+        _em.AddComponentData(_entity, new HealthRef { HealthEntity = _healthCreate.HealthEntity });
 
-        _entity = _em.CreateEntity(
-            typeof(LocalTransform)
-        );
-        _em.AddComponentData(_entity, new EnemyEntity()
-        {
-            Radius = _radius,
-            Id = _id
-        });
-        _em.AddComponentData(_entity, new HealthEntity() { Value = _health });
+        _healthCreate.RegisterEnemy(_entity);
     }
+
 
     void Update()
     {
@@ -35,7 +31,7 @@ public class EnemyManager : MonoBehaviour
 
         if (_em.HasComponent<DeadEvent>(_entity))
         {
-            Destroy(gameObject);
+            Destroy(_healthCreate.gameObject);
         }
 
         _deltaTime += Time.deltaTime;
@@ -61,10 +57,7 @@ public class EnemyManager : MonoBehaviour
     }
 
 
-    private void OnDestroy()
-    {
-        _em.DestroyEntity(_entity);
-    }
+
 }
 
 public struct EnemyEntity : IComponentData
@@ -73,11 +66,11 @@ public struct EnemyEntity : IComponentData
     public int Id;
 }
 
-public struct HealthEntity : IComponentData
-{
-    public int Value;
-}
+
 
 public struct DeadEvent : IComponentData
 {
 }
+
+
+
