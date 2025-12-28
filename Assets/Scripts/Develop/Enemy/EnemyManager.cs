@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private float _radius;
-    [SerializeField] private int _health = 10;
+    [SerializeField] private EnemyHealthCreate _healthCreate;
 
     [SerializeField] private int _id;
     private Entity _entity;
@@ -24,7 +24,7 @@ public class EnemyManager : MonoBehaviour
             Radius = _radius,
             Id = _id
         });
-        _em.AddComponentData(_entity, new HealthEntity() { Value = _health });
+        _em.AddComponentData(_entity, new HealthRef(){HealthEntity = _healthCreate.HealthEntity});
     }
 
     void Update()
@@ -63,6 +63,11 @@ public class EnemyManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (!World.DefaultGameObjectInjectionWorld.IsCreated)
+        {
+            return;
+        }
+        if (_em.Exists(_entity))
         _em.DestroyEntity(_entity);
     }
 }
