@@ -15,17 +15,13 @@ public class EnemyManager : MonoBehaviour
     void Start()
     {
         _em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        _entity = _em.CreateEntity(typeof(LocalTransform));
+        _em.AddComponentData(_entity, new EnemyEntity { Radius = _radius, Id = _id });
+        _em.AddComponentData(_entity, new HealthRef { HealthEntity = _healthCreate.HealthEntity });
 
-        _entity = _em.CreateEntity(
-            typeof(LocalTransform)
-        );
-        _em.AddComponentData(_entity, new EnemyEntity()
-        {
-            Radius = _radius,
-            Id = _id
-        });
-        _em.AddComponentData(_entity, new HealthRef(){HealthEntity = _healthCreate.HealthEntity});
+        _healthCreate.RegisterEnemy(_entity);
     }
+
 
     void Update()
     {
@@ -35,7 +31,7 @@ public class EnemyManager : MonoBehaviour
 
         if (_em.HasComponent<DeadEvent>(_entity))
         {
-            Destroy(gameObject);
+            Destroy(_healthCreate.gameObject);
         }
 
         _deltaTime += Time.deltaTime;
@@ -61,15 +57,7 @@ public class EnemyManager : MonoBehaviour
     }
 
 
-    private void OnDestroy()
-    {
-        if (!World.DefaultGameObjectInjectionWorld.IsCreated)
-        {
-            return;
-        }
-        if (_em.Exists(_entity))
-        _em.DestroyEntity(_entity);
-    }
+
 }
 
 public struct EnemyEntity : IComponentData
