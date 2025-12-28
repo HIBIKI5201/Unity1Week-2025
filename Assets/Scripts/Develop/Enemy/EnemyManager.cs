@@ -18,8 +18,7 @@ public class EnemyManager : MonoBehaviour
         _entity = _em.CreateEntity(typeof(LocalTransform));
         _em.AddComponentData(_entity, new EnemyEntity { Radius = _radius, Id = _id });
         _em.AddComponentData(_entity, new HealthRef { HealthEntity = _healthCreate.HealthEntity });
-
-        _healthCreate.RegisterEnemy(_entity);
+        
     }
 
 
