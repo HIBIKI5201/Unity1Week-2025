@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private PlayerCollision _playerCollision;
     private PlayerDead _playerDead;
     private AbilityManager _abilityManager;
-    private AbilityRepository _abilityRepository;
+    private AblityRepository _abilityRepository;
     private Vector2 _moveDirection;
     private EntityManager _em;
 
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
         AbilityBridge.Manager = _abilityManager;
 
         // ServiceLocator から AbilityRepository を取得
-        ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository);
+        ServiceLocator.TryGetInstance<AblityRepository>(out _abilityRepository);
 
         // ScriptableObject のマップがセットされているならリポジトリに登録（起動時）
         if (_abilityMap != null && _abilityRepository != null && _abilityMap.Entries != null)
@@ -202,7 +202,7 @@ public class PlayerController : MonoBehaviour
     private void ApplyRepositoryAbilities()
     {
         if (_abilityRepository == null)
-            ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository);
+            ServiceLocator.TryGetInstance<AblityRepository>(out _abilityRepository);
 
         if (_abilityRepository == null) return;
 

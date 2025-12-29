@@ -37,7 +37,7 @@ public class PlayerCollision
         );
 
         // ServiceLocator から AbilityRepository を参照（存在しなければ null）
-        if (!ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository))
+        if (!ServiceLocator.TryGetInstance<AblityRepository>(out _abilityRepository))
             _abilityRepository = null;
     }
 
@@ -47,7 +47,7 @@ public class PlayerCollision
     private EntityQuery _bulletQuery;
     private EntityQuery _enemyQuery;
     private readonly Func<bool> _isGhostActive;
-    private AbilityRepository _abilityRepository;
+    private AblityRepository _abilityRepository;
 
     public bool LateUpdate()
     {

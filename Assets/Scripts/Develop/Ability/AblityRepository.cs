@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AbilityRepository : MonoBehaviour
+public class AblityRepository : MonoBehaviour
 {
     private readonly object _sync = new();
     private readonly HashSet<int> _registered = new();
