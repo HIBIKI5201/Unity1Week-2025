@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AblityName
   m_EditorClassIdentifier: Assembly-CSharp::AblityName
   AblityEntries:
-  - Name: "\u5E7D\u970A"
+  - Name: Ghost
     Ability: 1
-  - Name: "\u8CAB\u901A"
+  - Name: Penetration
     Ability: 2

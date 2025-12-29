@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
         InitialRegistration();
 
         // AbilityManager の準備
-        _abilityManager = new AblityManager();
+        _abilityManager = ServiceLocator.GetInstance<AblityManager>();
         AbilityBridge.Manager = _abilityManager;
 
         // ServiceLocator から AbilityRepository を取得
@@ -129,7 +129,6 @@ public class PlayerController : MonoBehaviour
     private void OnMove(InputAction.CallbackContext context)
     {
         _moveDirection = context.ReadValue<Vector2>();
-        Debug.Log($"移動入力: {_moveDirection}");
     }
 
     private void OnAttack(InputAction.CallbackContext context)

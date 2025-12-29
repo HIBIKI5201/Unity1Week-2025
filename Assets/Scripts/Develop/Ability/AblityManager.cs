@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーのアクティブおよびパッシブアビリティを管理するコンポーネント。
 /// </summary>
-public class AblityManager
+public class AblityManager : MonoBehaviour
 {
     // アクティブアビリティ
     private IActiveAblity _active;

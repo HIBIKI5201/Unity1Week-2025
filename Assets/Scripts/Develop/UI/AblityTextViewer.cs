@@ -1,3 +1,4 @@
+using SymphonyFrameWork.System;
 using TMPro;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class AblityTextViewer : MonoBehaviour
 
     private void Start()
     {
-        _ablityManager = AbilityBridge.Manager;
+        _ablityManager = ServiceLocator.GetInstance<AblityManager>();
         Refresh();
     }
 
@@ -23,16 +24,27 @@ public class AblityTextViewer : MonoBehaviour
             t.text = "--------------";
             t.gameObject.SetActive(false);
         }
+        //アクティブアビリティを取得
+        var active = _ablityManager.GetActive();
         //パッシブアビリティを取得
         var passives = _ablityManager.GetPassives();
         //上から順に表示
         int index = 0;
+        // アクティブアビリティ表示
+        if (index < _text.Length)
+        {
+            _text[index].text = $"{GetName(active)}";
+            _text[index].gameObject.SetActive(true);
+            index++;
+        }
+
+        // パッシブアビリティ表示
         foreach (var p in passives)
         {
             if (index >= _text.Length)
-                break; // 表示枠を超えたら終了
+                break;
 
-            _text[index].text = GetName(p);
+            _text[index].text = $"{GetName(p)}";
             _text[index].gameObject.SetActive(true);
             index++;
         }
@@ -43,7 +55,7 @@ public class AblityTextViewer : MonoBehaviour
     /// </summary>
     private string GetName(object ability)
     {
-        if (ability == null) return "なし";
+        if (ability == null) return "";
 
         if (ability is IAbilityTypeHolder holder)
             return _ablityName.GetName(holder.AbilityType);
