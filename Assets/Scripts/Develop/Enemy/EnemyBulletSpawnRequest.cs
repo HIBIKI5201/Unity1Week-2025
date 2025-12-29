@@ -4,11 +4,11 @@ using UnityEngine;
 
 public readonly struct EnemyBulletSpawnRequest : IComponentData
 {
-    public EnemyBulletSpawnRequest(int index,float3 pos,Quaternion dir)
+    public EnemyBulletSpawnRequest(int index,float3 pos,Quaternion quaternion)
     {
         Id = index;
         Position = pos;
-        Direction = dir;
+        Direction = quaternion;
     }
 
     public readonly int Id;
