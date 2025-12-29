@@ -4,5 +4,5 @@ public struct EnemyBulletContext
 {
     public int Id;
     public float3 Position;
-    public quaternion Forward;
+    public int Horming;
 }

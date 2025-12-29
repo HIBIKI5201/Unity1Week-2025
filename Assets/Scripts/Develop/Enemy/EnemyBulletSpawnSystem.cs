@@ -43,9 +43,14 @@ public partial struct EnemyBulletSpawnSystem : ISystem
                 });
                 ecb.SetComponent(
                     bullet,
-                    LocalTransform.FromPositionRotation(
-                        request.ValueRO.Position,
-                        request.ValueRO.Direction));
+                    LocalTransform.FromPosition(
+                        request.ValueRO.Position
+                        ));
+                // ホーミング指定がある場合、追従タグを付与する
+                if (request.ValueRO.Horming == 1)
+                {
+                    ecb.AddComponent<HomingBulletTag>(bullet);
+                }
             }
 
 
