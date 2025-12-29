@@ -4,7 +4,7 @@ using UnityEngine;
 /// プレイヤーのゴースト（無敵）アビリティを表します。
 /// PlayerConfig を参照してアクティブ時間とクールダウン時間を取得する。
 /// </summary>
-public class GhostAbility : IActiveAblity
+public class GhostAbility : IActiveAblity,IAbilityTypeHolder
 {
     private readonly PlayerConfig _config;
     private float _activeRemaining;
@@ -25,6 +25,8 @@ public class GhostAbility : IActiveAblity
         _active = false;
         _cooling = false;
     }
+
+    public AblityType AbilityType => AblityType.Ghost;
 
     private float GetGhostTime() => _config != null ? _config.GhostTime : 0.5f;
     private float GetCoolTime() => _config != null ? _config.GhostAbilityCoolTime : 1.0f;
