@@ -6,8 +6,28 @@ using UnityEngine;
 /// </summary>
 public class AblityManager
 {
+    // アクティブアビリティ
     private IActiveAblity _active;
+    // パッシブアビリティのリスト
     private readonly List<IPassiveAbility> _passives = new();
+
+    /// <summary>
+    /// アクティブアビリティを取得。
+    /// </summary>
+    /// <returns></returns>
+    public IActiveAblity GetActive()
+    {
+        return _active;
+    }
+
+    /// <summary>
+    /// パッシブアビリティを取得。
+    /// </summary>
+    /// <returns></returns>
+    public IReadOnlyList<IPassiveAbility> GetPassives()
+    {
+        return _passives;
+    }
 
     /// <summary>
     /// アクティブアビリティを設定。
@@ -95,4 +115,5 @@ public class AblityManager
         foreach (var p in _passives)
             p.OnHit(ref ctx);
     }
+    
 }
