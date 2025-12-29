@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3191061791727591012}
   - component: {fileID: -4102652153208108966}
   m_Layer: 0
-  m_Name: EnemyBullet
+  m_Name: Bullet10005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,9 +103,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e685d3c3ecdb2534c9e16ba2bd5ec3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveAuthoring
-  Direction: {x: 0, y: 0, z: 1}
+  Direction: {x: 0, y: 0, z: -1}
   Speed: 3
   Radius: 1
   BulletType: 1
   damage: 5
-  EnemyId: 10001
+  EnemyId: 10005

@@ -1,5 +1,6 @@
 using Unity.Entities;
 using Unity.Transforms;
+using UnityEngine;
 
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 public partial struct EnemyBulletSpawnSystem : ISystem
@@ -21,7 +22,6 @@ public partial struct EnemyBulletSpawnSystem : ISystem
             int id = request.ValueRO.Id;
 
             Entity prefab = Entity.Null;
-
             foreach (var element in prefabBuffer)
             {
                 // ID が一致する Prefab を検索する
@@ -37,8 +37,20 @@ public partial struct EnemyBulletSpawnSystem : ISystem
             {
                 // EntityCommandBuffer を使って弾 Entity を生成する
                 Entity bullet = ecb.Instantiate(prefab);
-                ecb.SetComponent(bullet, LocalTransform.FromPosition(
-                    request.ValueRO.Position));
+                ecb.AddComponent(bullet, new EnemySource
+                {
+                    EnemyId = id
+                });
+                ecb.SetComponent(
+                    bullet,
+                    LocalTransform.FromPosition(
+                        request.ValueRO.Position
+                        ));
+                // ホーミング指定がある場合、追従タグを付与する
+                if (request.ValueRO.Horming == 1)
+                {
+                    ecb.AddComponent<HomingBulletTag>(bullet);
+                }
             }
 
 

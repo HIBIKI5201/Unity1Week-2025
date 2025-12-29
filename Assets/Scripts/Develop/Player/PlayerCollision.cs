@@ -26,7 +26,7 @@ public class PlayerCollision
             ComponentType.ReadOnly<BulletEntity>(),
             ComponentType.ReadOnly<EnemyBullet>(),
             ComponentType.ReadOnly<LocalTransform>(),
-            ComponentType.ReadOnly<EnemySorce>(),
+            ComponentType.ReadOnly<EnemySource>(),
             ComponentType.Exclude<PlayerHitResult>()
         );
 
@@ -66,7 +66,7 @@ public class PlayerCollision
             var bullets = _bulletQuery.ToEntityArray(Allocator.TempJob);
             var transforms = _bulletQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
             var bulletData = _bulletQuery.ToComponentDataArray<BulletEntity>(Allocator.TempJob);
-            var enemySources = _bulletQuery.ToComponentDataArray<EnemySorce>(Allocator.TempJob);
+            var enemySources = _bulletQuery.ToComponentDataArray<EnemySource>(Allocator.TempJob);
             var hitResults = new NativeArray<bool>(bulletCount, Allocator.TempJob);
 
             try

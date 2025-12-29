@@ -20,15 +20,14 @@ public class BulletEnemyPrefabBufferAuthring : MonoBehaviour
                 // Entity プレハブを取得
                 var prefabEntity = GetEntity(prefab, TransformUsageFlags.Dynamic);
                 Debug.Log($"{prefab.name}を追加");
-
-                // プレハブ自体に EnemySorce を付与しておく（インスタンス化時に継承される）
-                AddComponent(prefabEntity, new EnemySorce { EnemyId = prefab.EnemyId });
+                
                 // バッファに追加
                 buffer.Add(new BulletEnemyPrefabElement
                 {
                     Prefab = prefabEntity,
                     Id = prefab.EnemyId
                 });
+                Debug.Log(buffer);
             }
         }
     }
