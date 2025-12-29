@@ -26,6 +26,7 @@ public partial struct EnemyBulletSpawnSystem : ISystem
             Entity prefab = Entity.Null;
             foreach (var element in prefabBuffer)
             {
+                Debug.Log("yes1");
                 // ID が一致する Prefab を検索する
                 if (element.Id == id)
                 {
@@ -41,12 +42,15 @@ public partial struct EnemyBulletSpawnSystem : ISystem
                 Debug.Log("YES2");
                 // EntityCommandBuffer を使って弾 Entity を生成する
                 Entity bullet = ecb.Instantiate(prefab);
+                ecb.AddComponent(bullet, new EnemySource
+                {
+                    EnemyId = id
+                });
                 ecb.SetComponent(
                     bullet,
                     LocalTransform.FromPositionRotation(
                         request.ValueRO.Position,
                         request.ValueRO.Direction));
-
             }
 
 
