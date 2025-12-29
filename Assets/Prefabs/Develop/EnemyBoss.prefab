@@ -95,7 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   _radius: 1
   _healthCreate: {fileID: 3641043294493114857}
-  _id: 10001
+  _id: 10002
 --- !u!1 &6046058227999627791
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   _radius: 1
   _healthCreate: {fileID: 3641043294493114857}
-  _id: 10001
+  _id: 10002
 --- !u!1 &7378460603430745027
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,7 +189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
   _radius: 1
   _healthCreate: {fileID: 3641043294493114857}
-  _id: 10001
+  _id: 10002
 --- !u!1001 &3567198750872063402
 PrefabInstance:
   m_ObjectHideFlags: 0
