@@ -1,4 +1,6 @@
+using System.IO.Enumeration;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -6,6 +8,7 @@ public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private float _radius;
     [SerializeField] private EnemyHealthCreate _healthCreate;
+    private Transform _playerPosition;
 
     [SerializeField] private int _id;
     private Entity _entity;
@@ -14,6 +17,8 @@ public class EnemyManager : MonoBehaviour
     private float _deltaTime;
     void Start()
     {
+       // _playerPosition = FindAnyObjectByType<PlayerController>().transform;
+       _playerPosition = FindAnyObjectByType<EnemySpawn>().transform;
         _em = World.DefaultGameObjectInjectionWorld.EntityManager;
         _entity = _em.CreateEntity(typeof(LocalTransform));
         _em.AddComponentData(_entity, new EnemyEntity { Radius = _radius, Id = _id });
@@ -46,12 +51,16 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     private void ShootBullet()
     {
+        Vector3 direction = (_playerPosition.position - transform.position).normalized;
+        quaternion rotation =
+            quaternion.LookRotationSafe(direction, Vector3.up);
         EnemyBulletContext enemyContext = new EnemyBulletContext
         {
             Id = _id,
             Position = transform.position,
-            Forward = transform.forward,
+            Forward = rotation,
         };
+       
         BulletShootHelper.ShootEnemy(_em, enemyContext);
     }
 
