@@ -14,11 +14,14 @@ public class EnemyManager : MonoBehaviour
     private Entity _entity;
     private EntityManager _em;
 
+    [SerializeField] 
+    private int horming;
+
     private float _deltaTime;
     void Start()
     {
        // _playerPosition = FindAnyObjectByType<PlayerController>().transform;
-       _playerPosition = FindAnyObjectByType<EnemySpawn>().transform;
+     //  _playerPosition = FindAnyObjectByType<EnemySpawn>().transform;
         _em = World.DefaultGameObjectInjectionWorld.EntityManager;
         _entity = _em.CreateEntity(typeof(LocalTransform));
         _em.AddComponentData(_entity, new EnemyEntity { Radius = _radius, Id = _id });
@@ -51,14 +54,11 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     private void ShootBullet()
     {
-        Vector3 direction = (_playerPosition.position - transform.position).normalized;
-        quaternion rotation =
-            quaternion.LookRotationSafe(direction, Vector3.up);
         EnemyBulletContext enemyContext = new EnemyBulletContext
         {
             Id = _id,
             Position = transform.position,
-            Forward = rotation,
+            Horming = horming
         };
        
         BulletShootHelper.ShootEnemy(_em, enemyContext);
