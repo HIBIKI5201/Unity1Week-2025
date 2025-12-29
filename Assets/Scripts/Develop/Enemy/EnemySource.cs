@@ -1,5 +1,5 @@
 using Unity.Entities;
-public struct EnemySorce : IComponentData
+public struct EnemySource : IComponentData
 {
     public int EnemyId;
 }
