@@ -113,6 +113,7 @@ MonoBehaviour:
   _radius: 1
   _healthCreate: {fileID: 202342240345648478}
   _id: 10005
+  horming: 1
 --- !u!33 &6163594120746702493
 MeshFilter:
   m_ObjectHideFlags: 0
