@@ -10,7 +10,7 @@ public static class BulletShootHelper
             new BulletSpawnRequest(index, pos, forward, 0));
     }
 
-    public static void ShootEnemy(this EntityManager em, int enemyId, float3 pos, float3 forward)
+    public static void ShootEnemy(this EntityManager em, int enemyId, float3 pos, quaternion forward)
     {
         var request = em.CreateEntity();
         em.AddComponentData(request,
