@@ -1,9 +1,10 @@
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 
 public readonly struct EnemyBulletSpawnRequest : IComponentData
 {
-    public EnemyBulletSpawnRequest(int index,float3 pos,float3 dir)
+    public EnemyBulletSpawnRequest(int index,float3 pos,Quaternion dir)
     {
         Id = index;
         Position = pos;
@@ -12,5 +13,5 @@ public readonly struct EnemyBulletSpawnRequest : IComponentData
 
     public readonly int Id;
     public readonly float3 Position;
-    public readonly float3 Direction;
+    public readonly Quaternion Direction;
 }
