@@ -4,9 +4,9 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーのアクティブおよびパッシブアビリティを管理するコンポーネント。
 /// </summary>
-public class AbilityManager
+public class AblityManager
 {
-    private IActiveAbility _active;
+    private IActiveAblity _active;
     private readonly List<IPassiveAbility> _passives = new();
 
     /// <summary>
@@ -14,7 +14,7 @@ public class AbilityManager
     /// 既に設定されているアクティブは Deactivate() を呼んで安全に停止する。
     /// </summary>
     /// <param name="ability">設定するアクティブアビリティ（null で解除）</param>
-    public void SetActive(IActiveAbility ability)
+    public void SetActive(IActiveAblity ability)
     {
         if (_active != null)
         {

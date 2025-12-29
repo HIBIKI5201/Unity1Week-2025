@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _penetrationAbility;
 
     [Header("Repository マッピング (敵ID を指定)")]
-    [SerializeField] private AbilityMap _abilityMap;
+    [SerializeField] private AblityMap _abilityMap;
 
     private PlayerConfig _config;
     private Camera _camera;
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private PlayerAttacker _playerAttacker;
     private PlayerCollision _playerCollision;
     private PlayerDead _playerDead;
-    private AbilityManager _abilityManager;
+    private AblityManager _abilityManager;
     private AblityRepository _abilityRepository;
     private Vector2 _moveDirection;
     private EntityManager _em;
@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
         InitialRegistration();
 
         // AbilityManager の準備
-        _abilityManager = new AbilityManager();
+        _abilityManager = new AblityManager();
         AbilityBridge.Manager = _abilityManager;
 
         // ServiceLocator から AbilityRepository を取得
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         {
             foreach (var e in _abilityMap.Entries)
             {
-                _abilityRepository.RegisterMapping(e.EnemyId, e.Ability);
+                _abilityRepository.RegisterMapping(e.EnemyId, e.Ablity);
             }
         }
 
@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour
         {
             switch (a)
             {
-                case AbilityType.Ghost:
+                case AblityType.Ghost:
                     if (!_repoGhostApplied)
                     {
                         if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config);
@@ -222,7 +222,7 @@ public class PlayerController : MonoBehaviour
                         Debug.Log("Repository によりゴースト能力を付与");
                     }
                     break;
-                case AbilityType.Penetration:
+                case AblityType.Penetration:
                     if (!_repoPenetrationApplied)
                     {
                         if (_penetrationInstance == null) _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);

@@ -6,11 +6,11 @@ using UnityEngine;
 public class AblityName : ScriptableObject
 {
     [SerializeField] private AblityTypes[] AblityEntries;
-    private Dictionary<AbilityType, string> _cache;
+    private Dictionary<AblityType, string> _cache;
 
     private void OnEnable()
     {
-        _cache = new Dictionary<AbilityType, string>();
+        _cache = new Dictionary<AblityType, string>();
         foreach (var e in AblityEntries)
         {
             if (!_cache.ContainsKey(e.Ability))
@@ -18,7 +18,7 @@ public class AblityName : ScriptableObject
         }
     }
 
-    public string GetName(AbilityType type)
+    public string GetName(AblityType type)
     {
         if (_cache != null && _cache.TryGetValue(type, out var name))
             return name;
@@ -31,5 +31,5 @@ public class AblityName : ScriptableObject
 public class AblityTypes
 {
     public string Name;
-    public AbilityType Ability;
+    public AblityType Ability;
 }

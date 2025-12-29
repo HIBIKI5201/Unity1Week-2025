@@ -1,16 +1,9 @@
+using TMPro;
 using UnityEngine;
 
 public class AblityTextViewer : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [SerializeField] private TMP_Text[] _text;
+    [SerializeField] private AblityName _ablityName;
+    private AblityManager _ablityManager;
 }

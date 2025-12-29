@@ -6,7 +6,7 @@ public class AblityRepository : MonoBehaviour
     private readonly object _sync = new();
     private readonly HashSet<int> _registered = new();
     private readonly HashSet<int> _consumed = new();
-    private readonly Dictionary<int, AbilityType> _mapping = new();
+    private readonly Dictionary<int, AblityType> _mapping = new();
 
     /// <summary>
     /// 初回ヒットのみ登録する（既に登録/消費済みなら false）。
@@ -26,7 +26,7 @@ public class AblityRepository : MonoBehaviour
     /// <summary>
     /// enemyId -> AbilityType のマッピングを登録（起動時に ScriptableObject から呼ぶ）。
     /// </summary>
-    public void RegisterMapping(int enemyId, AbilityType ability)
+    public void RegisterMapping(int enemyId, AblityType ability)
     {
         lock (_sync)
         {
@@ -37,15 +37,15 @@ public class AblityRepository : MonoBehaviour
     /// <summary>
     /// 未消費の登録済み enemyId をマッピングに従って列挙し、消費済みにマークして返す（1回限り）。
     /// </summary>
-    public List<AbilityType> GetAndConsumeMappedAbilities()
+    public List<AblityType> GetAndConsumeMappedAbilities()
     {
         lock (_sync)
         {
-            var result = new List<AbilityType>();
+            var result = new List<AblityType>();
             foreach (var id in _registered)
             {
                 if (_consumed.Contains(id)) continue;
-                if (_mapping.TryGetValue(id, out var ability) && ability != AbilityType.None)
+                if (_mapping.TryGetValue(id, out var ability) && ability != AblityType.None)
                 {
                     result.Add(ability);
                 }
