@@ -24,8 +24,8 @@ public sealed class EnemySpawner : MonoBehaviour
         {
             Instantiate(
                _enemyPrefab,
-                transform.position,
-                Quaternion.identity);
+                transform.position
+                ,_enemyPrefab.transform.rotation);
 
             yield return new WaitForSeconds(_intervalSeconds);
         }
