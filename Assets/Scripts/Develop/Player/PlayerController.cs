@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private PlayerDead _playerDead;
     private AbilityManager _abilityManager;
     private AbilityRepository _abilityRepository;
+    private Renderer _renderer;
     private Vector2 _moveDirection;
     private EntityManager _em;
 
@@ -71,6 +72,7 @@ public class PlayerController : MonoBehaviour
         _playerAttacker = new PlayerAttacker(_em, _config);
         _playerCollision = new PlayerCollision(_em, transform, _config, () => _ghostInstance != null && _ghostInstance.IsActive);
         _playerDead = new PlayerDead(_config);
+        _renderer = GetComponent<Renderer>();
     }
 
     private void OnDestroy()
@@ -148,7 +150,7 @@ public class PlayerController : MonoBehaviour
         {
             if (_ghostInstance == null)
             {
-                _ghostInstance = new GhostAbility(_config);
+                _ghostInstance = new GhostAbility(_config, _renderer);
             }
             // 常に AbilityManager に設定して有効化（Start/ランタイムどちらでも）
             _abilityManager.SetActive(_ghostInstance);
@@ -209,7 +211,7 @@ public class PlayerController : MonoBehaviour
                 case AbilityType.Ghost:
                     if (!_repoGhostApplied)
                     {
-                        if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config);
+                        if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config, _renderer);
                         _abilityManager.SetActive(_ghostInstance);
                         _repoGhostApplied = true;
                         Debug.Log("ApplyGrantedAbilities: ゴーストアビリティを登録しました。");

@@ -4,9 +4,12 @@ using UnityEngine;
 /// プレイヤーのゴースト（無敵）アビリティを表します。
 /// PlayerConfig を参照してアクティブ時間とクールダウン時間を取得する。
 /// </summary>
-public class GhostAbility : IActiveAblity,IAbilityTypeHolder
+public class GhostAbility : IActiveAblity, IAbilityTypeHolder
 {
     private readonly PlayerConfig _config;
+    private Material _defaultMaterial;
+    private Material _ghostMaterial;
+    private Renderer _renderer;
     private float _activeRemaining;
     private float _cooldownRemaining;
     private bool _active;
@@ -17,8 +20,11 @@ public class GhostAbility : IActiveAblity,IAbilityTypeHolder
     /// config が null の場合は安全なデフォルトを使用する。
     /// </summary>
     /// <param name="config">プレイヤー設定（null 許容）</param>
-    public GhostAbility(PlayerConfig config)
+    public GhostAbility(PlayerConfig config, Renderer renderer)
     {
+        _renderer = renderer;
+        _ghostMaterial = _config.GhostMaterial;
+        _defaultMaterial = renderer.material;
         _config = config;
         _activeRemaining = 0f;
         _cooldownRemaining = 0f;
@@ -53,6 +59,7 @@ public class GhostAbility : IActiveAblity,IAbilityTypeHolder
         _activeRemaining = GetGhostTime();
         _cooldownRemaining = GetCoolTime();
         _cooling = false;
+        this._renderer.material = _ghostMaterial;
         Debug.Log("Ghost Ability Activated");
     }
 
@@ -69,6 +76,7 @@ public class GhostAbility : IActiveAblity,IAbilityTypeHolder
             {
                 _active = false;
                 _cooling = true;
+                this._renderer.material = _defaultMaterial;
                 // クールダウンは Activate 時に設定済み
                 Debug.Log("Ghost Ability Ended, entering cooldown");
             }
