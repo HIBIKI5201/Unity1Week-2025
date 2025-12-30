@@ -4,7 +4,7 @@ using UnityEngine.Splines;
 
 public class EnemyMoveSplineWave : MonoBehaviour
 {
-    [SerializeField] private SplineContainer _splineContainer;
+    private SplineCon _splineCon;
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _waveAmplitude = 1f; // ウェーブの振幅
     [SerializeField] private float _waveFrequency = 1f; // ウェーブの周波数
@@ -12,13 +12,26 @@ public class EnemyMoveSplineWave : MonoBehaviour
     private float _splineLength = 0f;
     private float _t = 0f;
     private float _waveTime = 0f;
+    private SplineContainer _splineContainer;
+    private SplineType SplineType => _currentType;
+    [SerializeField]
+    private SplineType _currentType = SplineType.None;
 
     private void Start()
     {
-        if (_splineContainer == null) return;
+        _splineCon = FindAnyObjectByType<SplineCon>();
+        if (_splineCon == null) return;
+        _splineContainer = _currentType switch
+        {
+            SplineType.Wave => _splineCon.Wave,
+            SplineType.Boss => _splineCon.Boss,
+            SplineType.Group => _splineCon.Group,
+            _ => null
+        };
+
         _splineLength = _splineContainer.CalculateLength();
     }
-    
+
     private void Update()
     {
         if (_splineContainer == null || _t >= 1f) return;
