@@ -8,7 +8,7 @@ public class AblityMap : ScriptableObject
 }
 
 [Serializable]
-public enum AblityType
+public enum AbilityType
 {
     None,
     Ghost,
@@ -19,5 +19,5 @@ public enum AblityType
 public class AblityEntry
 {
     public int EnemyId;
-    public AblityType Ablity;
+    public AbilityType Ablity;
 }

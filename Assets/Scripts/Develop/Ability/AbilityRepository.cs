@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AblityRepository
+public class AbilityRepository
 {
     private readonly object _sync = new();
     private readonly HashSet<int> _registered = new();
     private readonly HashSet<int> _consumed = new();
-    private readonly Dictionary<int, AblityType> _mapping = new();
+    private readonly Dictionary<int, AbilityType> _mapping = new();
 
 
     /// <summary>
@@ -28,7 +28,7 @@ public class AblityRepository
     /// <summary>
     /// enemyId -> AbilityType のマッピングを登録（起動時に ScriptableObject から呼ぶ）。
     /// </summary>
-    public void RegisterMapping(int enemyId, AblityType ability)
+    public void RegisterMapping(int enemyId, AbilityType ability)
     {
         lock (_sync)
         {
@@ -40,17 +40,17 @@ public class AblityRepository
     /// <summary>
     /// 未消費の登録済み enemyId をマッピングに従って列挙し、消費済みにマークして返す（1回限り）。
     /// </summary>
-    public List<AblityType> GetAndConsumeMappedAbilities()
+    public List<AbilityType> GetAndConsumeMappedAbilities()
     {
         lock (_sync)
         {
-            var result = new List<AblityType>();
+            var result = new List<AbilityType>();
             foreach (var id in _registered)
             {
                 if (_consumed.Contains(id))
                     continue;
 
-                if (_mapping.TryGetValue(id, out var ability) && ability != AblityType.None)
+                if (_mapping.TryGetValue(id, out var ability) && ability != AbilityType.None)
                 {
                     result.Add(ability);
                     Debug.Log($"AblityRepository: Consume enemyId={id}, ability={ability}");
@@ -66,14 +66,14 @@ public class AblityRepository
     /// <summary>
     /// 消費済みの敵 ID に対するすべてのアビリティを取得します。
     /// </summary>
-    public List<AblityType> GetGrantedAbilities()
+    public List<AbilityType> GetGrantedAbilities()
     {
         lock (_sync)
         {
-            var result = new List<AblityType>(_consumed.Count);
+            var result = new List<AbilityType>(_consumed.Count);
             foreach (var id in _consumed)
             {
-                if (_mapping.TryGetValue(id, out var ability) && ability != AblityType.None)
+                if (_mapping.TryGetValue(id, out var ability) && ability != AbilityType.None)
                 {
                     result.Add(ability);
                 }

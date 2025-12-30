@@ -21,8 +21,8 @@ public class PlayerController : MonoBehaviour
     private PlayerAttacker _playerAttacker;
     private PlayerCollision _playerCollision;
     private PlayerDead _playerDead;
-    private AblityManager _abilityManager;
-    private AblityRepository _abilityRepository;
+    private AbilityManager _abilityManager;
+    private AbilityRepository _abilityRepository;
     private Vector2 _moveDirection;
     private EntityManager _em;
 
@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
         InitialRegistration();
 
         // AbilityManager の準備
-        _abilityManager = ServiceLocator.GetInstance<AblityManager>();
+        _abilityManager = ServiceLocator.GetInstance<AbilityManager>();
         AbilityBridge.Manager = _abilityManager;
 
         ServiceLocator.TryGetInstance(out _abilityRepository);
@@ -192,6 +192,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void ApplyGrantedAbilities()
     {
+        if (_abilityRepository == null)
+        {
+            ServiceLocator.TryGetInstance(out _abilityRepository);
+        }
+
         if (_abilityRepository == null) return;
 
         var granted = _abilityRepository.GetGrantedAbilities();
@@ -201,25 +206,35 @@ public class PlayerController : MonoBehaviour
         {
             switch (ability)
             {
-                case AblityType.Ghost:
+                case AbilityType.Ghost:
                     if (!_repoGhostApplied)
                     {
                         if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config);
                         _abilityManager.SetActive(_ghostInstance);
                         _repoGhostApplied = true;
+                        Debug.Log("ApplyGrantedAbilities: ゴーストアビリティを登録しました。");
                     }
                     break;
-                case AblityType.Penetration:
+                case AbilityType.Penetration:
                     if (!_repoPenetrationApplied)
                     {
-                        if (_penetrationInstance == null) _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);
+                        if (_penetrationInstance == null)
+                        {
+                            _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);
+                        }
+
                         if (!_penetrationAdded)
                         {
                             _abilityManager.AddPassive(_penetrationInstance);
                             _penetrationAdded = true;
                         }
+
                         _repoPenetrationApplied = true;
+                        Debug.Log("ApplyGrantedAbilities: 貫通アビリティを登録しました。");
                     }
+                    break;
+                default:
+                    Debug.Log($"ApplyGrantedAbilities: 未対応のアビリティ {ability} が登録済みです。");
                     break;
             }
         }

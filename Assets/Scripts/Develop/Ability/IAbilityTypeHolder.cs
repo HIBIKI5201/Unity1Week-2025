@@ -1,4 +1,4 @@
 public interface IAbilityTypeHolder
 {
-    AblityType AbilityType { get; }
+    AbilityType AbilityType { get; }
 }

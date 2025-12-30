@@ -14,7 +14,7 @@ public class PlayerDead
 
     public void OnDead()
     {
-        if (ServiceLocator.TryGetInstance<AblityRepository>(out var repository))
+        if (ServiceLocator.TryGetInstance<AbilityRepository>(out var repository))
         {
             repository.GetAndConsumeMappedAbilities();
         }

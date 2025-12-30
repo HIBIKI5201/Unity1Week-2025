@@ -5,9 +5,9 @@ public class TitleInit : MonoBehaviour
 {
     private void Awake()
     {
-        if (!ServiceLocator.TryGetInstance<AblityRepository>(out _))
+        if (!ServiceLocator.TryGetInstance<AbilityRepository>(out _))
         {
-            ServiceLocator.RegisterInstance(new AblityRepository(), ServiceLocator.LocateType.Locator);
+            ServiceLocator.RegisterInstance(new AbilityRepository(), ServiceLocator.LocateType.Locator);
         }
     }
 }

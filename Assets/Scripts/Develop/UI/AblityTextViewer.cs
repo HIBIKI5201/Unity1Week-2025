@@ -5,12 +5,12 @@ using UnityEngine;
 public class AblityTextViewer : MonoBehaviour
 {
     [SerializeField] private TMP_Text[] _text;
-    [SerializeField] private AblityName _ablityName;
-    private AblityRepository _ablityRepository;
+    [SerializeField] private AbilityName _ablityName;
+    private AbilityRepository _ablityRepository;
 
     private void Start()
     {
-        _ablityRepository = ServiceLocator.GetInstance<AblityRepository>();
+        _ablityRepository = ServiceLocator.GetInstance<AbilityRepository>();
         Refresh();
     }
 
@@ -27,7 +27,7 @@ public class AblityTextViewer : MonoBehaviour
 
         if (_ablityRepository == null)
         {
-            _ablityRepository = ServiceLocator.GetInstance<AblityRepository>();
+            _ablityRepository = ServiceLocator.GetInstance<AbilityRepository>();
             if (_ablityRepository == null)
             {
                 Debug.LogWarning("AblityTextViewer: AblityRepository が取得できませんでした。");
@@ -44,7 +44,7 @@ public class AblityTextViewer : MonoBehaviour
         int index = 0;
         foreach (var ability in grantedAbilities)
         {
-            if (ability == AblityType.None)
+            if (ability == AbilityType.None)
             {
                 continue;
             }
@@ -60,7 +60,7 @@ public class AblityTextViewer : MonoBehaviour
         }
     }
 
-    private string GetName(AblityType ability)
+    private string GetName(AbilityType ability)
     {
         if (_ablityName != null)
         {

@@ -26,7 +26,7 @@ public class GhostAbility : IActiveAblity,IAbilityTypeHolder
         _cooling = false;
     }
 
-    public AblityType AbilityType => AblityType.Ghost;
+    public AbilityType AbilityType => AbilityType.Ghost;
 
     private float GetGhostTime() => _config != null ? _config.GhostTime : 0.5f;
     private float GetCoolTime() => _config != null ? _config.GhostAbilityCoolTime : 1.0f;

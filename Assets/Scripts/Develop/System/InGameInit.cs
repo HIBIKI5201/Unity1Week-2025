@@ -9,13 +9,13 @@ public class InGameInit : MonoBehaviour
     [SerializeField] private AblityMap _abilityMap;
     [SerializeField] private float _cameraMoveSpeed = 2f;
     private Camera _camera;
-    private AblityRepository _abilityRepository;
+    private AbilityRepository _abilityRepository;
 
     private void Awake()
     {
         if (!ServiceLocator.TryGetInstance(out _abilityRepository))
         {
-            _abilityRepository = new AblityRepository();
+            _abilityRepository = new AbilityRepository();
             ServiceLocator.RegisterInstance(_abilityRepository, ServiceLocator.LocateType.Locator);
         }
         // ScriptableObject で定義したマップがあれば登録
