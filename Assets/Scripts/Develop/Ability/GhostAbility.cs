@@ -22,10 +22,10 @@ public class GhostAbility : IActiveAblity, IAbilityTypeHolder
     /// <param name="config">プレイヤー設定（null 許容）</param>
     public GhostAbility(PlayerConfig config, Renderer renderer)
     {
+        _config = config;
         _renderer = renderer;
         _ghostMaterial = _config.GhostMaterial;
         _defaultMaterial = renderer.material;
-        _config = config;
         _activeRemaining = 0f;
         _cooldownRemaining = 0f;
         _active = false;

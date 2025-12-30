@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        _renderer = GetComponent<Renderer>();
+        if(_renderer) Debug.Log(_renderer.material.name);
         _em = World.DefaultGameObjectInjectionWorld.EntityManager;
         _inputBuffer = GetComponent<InputBuffer>();
         Collider playerCollider = GetComponent<Collider>();
@@ -72,7 +74,6 @@ public class PlayerController : MonoBehaviour
         _playerAttacker = new PlayerAttacker(_em, _config);
         _playerCollision = new PlayerCollision(_em, transform, _config, () => _ghostInstance != null && _ghostInstance.IsActive);
         _playerDead = new PlayerDead(_config);
-        _renderer = GetComponent<Renderer>();
     }
 
     private void OnDestroy()
@@ -150,6 +151,10 @@ public class PlayerController : MonoBehaviour
         {
             if (_ghostInstance == null)
             {
+                if (_renderer == null)
+                {
+                    _renderer = GetComponent<Renderer>();
+                }
                 _ghostInstance = new GhostAbility(_config, _renderer);
             }
             // 常に AbilityManager に設定して有効化（Start/ランタイムどちらでも）
@@ -211,6 +216,10 @@ public class PlayerController : MonoBehaviour
                 case AbilityType.Ghost:
                     if (!_repoGhostApplied)
                     {
+                        if (_renderer == null)
+                        {
+                            _renderer = GetComponent<Renderer>();
+                        }
                         if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config, _renderer);
                         _abilityManager.SetActive(_ghostInstance);
                         _repoGhostApplied = true;
