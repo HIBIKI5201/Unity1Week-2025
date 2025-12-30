@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8694843991217812453}
   - component: {fileID: 202342240345648478}
   - component: {fileID: 2634333195550220922}
+  - component: {fileID: 4329817256756657163}
   m_Layer: 0
   m_Name: EnemyGroup
   m_TagString: Untagged
@@ -59,10 +60,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c3f764ad15fa140b52e83744d3f6d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMoveSplineWave
-  _splineContainer: {fileID: 6314542182586583425, guid: 921b2ce3f872b2b43a154f7c2d675e93, type: 3}
   _speed: 5
   _waveAmplitude: 1
   _waveFrequency: 1
+  _currentType: 3
+--- !u!114 &4329817256756657163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4447814665876130076}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bff6d6f250590c4c825dcd1151d4d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMoveSpline
+  _speed: 5
+  _currentType: 3
 --- !u!1 &8113543262548634316
 GameObject:
   m_ObjectHideFlags: 0
