@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AbilityRepository : MonoBehaviour
+public class AbilityRepository
 {
     private readonly object _sync = new();
     private readonly HashSet<int> _registered = new();
     private readonly HashSet<int> _consumed = new();
     private readonly Dictionary<int, AbilityType> _mapping = new();
+
 
     /// <summary>
     /// 初回ヒットのみ登録する（既に登録/消費済みなら false）。
@@ -19,6 +20,7 @@ public class AbilityRepository : MonoBehaviour
                 return false;
 
             _registered.Add(enemyId);
+            Debug.Log($"AblityRepository: RegisterHitOnce enemyId={enemyId}");
             return true;
         }
     }
@@ -31,6 +33,7 @@ public class AbilityRepository : MonoBehaviour
         lock (_sync)
         {
             _mapping[enemyId] = ability;
+            Debug.Log($"AblityRepository: RegisterMapping enemyId={enemyId}, ability={ability}");
         }
     }
 
@@ -44,12 +47,36 @@ public class AbilityRepository : MonoBehaviour
             var result = new List<AbilityType>();
             foreach (var id in _registered)
             {
-                if (_consumed.Contains(id)) continue;
+                if (_consumed.Contains(id))
+                    continue;
+
+                if (_mapping.TryGetValue(id, out var ability) && ability != AbilityType.None)
+                {
+                    result.Add(ability);
+                    Debug.Log($"AblityRepository: Consume enemyId={id}, ability={ability}");
+                }
+
+                _consumed.Add(id);
+            }
+
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// 消費済みの敵 ID に対するすべてのアビリティを取得します。
+    /// </summary>
+    public List<AbilityType> GetGrantedAbilities()
+    {
+        lock (_sync)
+        {
+            var result = new List<AbilityType>(_consumed.Count);
+            foreach (var id in _consumed)
+            {
                 if (_mapping.TryGetValue(id, out var ability) && ability != AbilityType.None)
                 {
                     result.Add(ability);
                 }
-                _consumed.Add(id);
             }
             return result;
         }

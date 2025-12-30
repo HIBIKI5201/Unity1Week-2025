@@ -6,20 +6,24 @@ public class InGameInit : MonoBehaviour
     [SerializeField] private PlayerConfig _config;
     [SerializeField] private CameraMover _cameraMover;
     [SerializeField] private PlayerController _playerController;
-    [SerializeField] private AbilityMap _abilityMap;
+    [SerializeField] private AblityMap _abilityMap;
     [SerializeField] private float _cameraMoveSpeed = 2f;
     private Camera _camera;
     private AbilityRepository _abilityRepository;
 
     private void Awake()
     {
-        _abilityRepository = ServiceLocator.GetInstance<AbilityRepository>();
+        if (!ServiceLocator.TryGetInstance(out _abilityRepository))
+        {
+            _abilityRepository = new AbilityRepository();
+            ServiceLocator.RegisterInstance(_abilityRepository, ServiceLocator.LocateType.Locator);
+        }
         // ScriptableObject で定義したマップがあれば登録
         if (_abilityMap != null && _abilityMap.Entries != null)
         {
             foreach (var e in _abilityMap.Entries)
             {
-                _abilityRepository.RegisterMapping(e.EnemyId, e.Ability);
+                _abilityRepository.RegisterMapping(e.EnemyId, e.Ablity);
             }
         }
         _cameraMover.Init(_cameraMoveSpeed);

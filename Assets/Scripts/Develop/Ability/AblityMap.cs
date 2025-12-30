@@ -2,9 +2,9 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AbilityMap", menuName = "ScriptableObjects/AbilityMap", order = 0)]
-public class AbilityMap : ScriptableObject
+public class AblityMap : ScriptableObject
 {
-    public AbilityEntry[] Entries;
+    public AblityEntry[] Entries;
 }
 
 [Serializable]
@@ -16,8 +16,8 @@ public enum AbilityType
 }
 
 [Serializable]
-public class AbilityEntry
+public class AblityEntry
 {
     public int EnemyId;
-    public AbilityType Ability;
+    public AbilityType Ablity;
 }

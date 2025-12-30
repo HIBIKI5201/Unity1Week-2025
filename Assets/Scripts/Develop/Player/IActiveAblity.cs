@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IActiveAbility
+public interface IActiveAblity
 {
     bool CanActivate { get; }
     bool IsActive { get; }

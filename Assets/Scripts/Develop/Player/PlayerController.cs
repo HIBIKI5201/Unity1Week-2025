@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _penetrationAbility;
 
     [Header("Repository マッピング (敵ID を指定)")]
-    [SerializeField] private AbilityMap _abilityMap;
+    [SerializeField] private AblityMap _abilityMap;
 
     private PlayerConfig _config;
     private Camera _camera;
@@ -53,25 +53,18 @@ public class PlayerController : MonoBehaviour
         InitialRegistration();
 
         // AbilityManager の準備
-        _abilityManager = new AbilityManager();
+        _abilityManager = ServiceLocator.GetInstance<AbilityManager>();
         AbilityBridge.Manager = _abilityManager;
 
-        // ServiceLocator から AbilityRepository を取得
-        ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository);
+        ServiceLocator.TryGetInstance(out _abilityRepository);
 
-        // ScriptableObject のマップがセットされているならリポジトリに登録（起動時）
-        if (_abilityMap != null && _abilityRepository != null && _abilityMap.Entries != null)
-        {
-            foreach (var e in _abilityMap.Entries)
-            {
-                _abilityRepository.RegisterMapping(e.EnemyId, e.Ability);
-            }
-        }
-
-        // 初期同期（シリアライズ済みフラグに従ってアビリティを追加/設定する）
+        // マッピング登録…
         SyncAbilities(true);
         _prevGhostFlag = _ghostAbilirty;
         _prevPenetrationFlag = _penetrationAbility;
+
+        // Repository からのアビリティ適用
+        ApplyGrantedAbilities();
 
         // 各種ユーティリティを初期化（PlayerCollision にはゴースト判定デリゲートを渡す）
         _playerMover = new PlayerMover(_config, transform, playerCollider, _camera);
@@ -94,7 +87,6 @@ public class PlayerController : MonoBehaviour
             _prevGhostFlag = _ghostAbilirty;
             _prevPenetrationFlag = _penetrationAbility;
         }
-        ApplyRepositoryAbilities();
         // アビリティの時間経過処理を毎フレーム呼ぶ
         _abilityManager?.Tick(Time.deltaTime);
         _playerMover.OnMove(_moveDirection, _cameraMover.ScrollVelocity, Time.deltaTime);
@@ -129,7 +121,6 @@ public class PlayerController : MonoBehaviour
     private void OnMove(InputAction.CallbackContext context)
     {
         _moveDirection = context.ReadValue<Vector2>();
-        Debug.Log($"移動入力: {_moveDirection}");
     }
 
     private void OnAttack(InputAction.CallbackContext context)
@@ -199,19 +190,21 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// AbilityRepository からマッピングされたアビリティを取得して適用する。
     /// </summary>
-    private void ApplyRepositoryAbilities()
+    private void ApplyGrantedAbilities()
     {
         if (_abilityRepository == null)
-            ServiceLocator.TryGetInstance<AbilityRepository>(out _abilityRepository);
+        {
+            ServiceLocator.TryGetInstance(out _abilityRepository);
+        }
 
         if (_abilityRepository == null) return;
 
-        var abilities = _abilityRepository.GetAndConsumeMappedAbilities();
-        if (abilities == null || abilities.Count == 0) return;
+        var granted = _abilityRepository.GetGrantedAbilities();
+        if (granted == null || granted.Count == 0) return;
 
-        foreach (var a in abilities)
+        foreach (var ability in granted)
         {
-            switch (a)
+            switch (ability)
             {
                 case AbilityType.Ghost:
                     if (!_repoGhostApplied)
@@ -219,23 +212,29 @@ public class PlayerController : MonoBehaviour
                         if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config);
                         _abilityManager.SetActive(_ghostInstance);
                         _repoGhostApplied = true;
-                        Debug.Log("Repository によりゴースト能力を付与");
+                        Debug.Log("ApplyGrantedAbilities: ゴーストアビリティを登録しました。");
                     }
                     break;
                 case AbilityType.Penetration:
                     if (!_repoPenetrationApplied)
                     {
-                        if (_penetrationInstance == null) _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);
+                        if (_penetrationInstance == null)
+                        {
+                            _penetrationInstance = new PenetrationAbility(_config.PenetrationCount);
+                        }
+
                         if (!_penetrationAdded)
                         {
                             _abilityManager.AddPassive(_penetrationInstance);
                             _penetrationAdded = true;
                         }
+
                         _repoPenetrationApplied = true;
-                        Debug.Log("Repository により貫通能力を付与");
+                        Debug.Log("ApplyGrantedAbilities: 貫通アビリティを登録しました。");
                     }
                     break;
                 default:
+                    Debug.Log($"ApplyGrantedAbilities: 未対応のアビリティ {ability} が登録済みです。");
                     break;
             }
         }

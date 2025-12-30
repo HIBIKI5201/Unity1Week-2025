@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 14957341}
   - component: {fileID: 14957342}
-  - component: {fileID: 14957343}
+  - component: {fileID: 14957344}
   m_Layer: 0
   m_Name: Locater
   m_TagString: Untagged
@@ -168,7 +168,7 @@ MonoBehaviour:
   _locateType: 1
   _autoRegister: 1
   _autoUnregister: 1
---- !u!114 &14957343
+--- !u!114 &14957344
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c2c69bb427f88f408b097383b690c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SymphonyFrameWork::SymphonyFrameWork.Utility.SymphonyLocate
-  _target: {fileID: 1983995745}
+  _target: {fileID: 1646130996}
   _locateType: 1
   _autoRegister: 1
   _autoUnregister: 1
@@ -229,7 +229,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1983995744
+--- !u!1 &1646130995
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,37 +237,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1983995746}
-  - component: {fileID: 1983995745}
+  - component: {fileID: 1646130997}
+  - component: {fileID: 1646130996}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: AblityManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1983995745
+--- !u!114 &1646130996
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1983995744}
+  m_GameObject: {fileID: 1646130995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4e12112dbd9e8440838c3884cabb0e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 246e84463d5b46a409b8281c781a0d82, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AbilityRepository
---- !u!4 &1983995746
+  m_EditorClassIdentifier: Assembly-CSharp::AblityManager
+--- !u!4 &1646130997
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1983995744}
+  m_GameObject: {fileID: 1646130995}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.94084, y: -1956.8583, z: 1472.1359}
+  m_LocalPosition: {x: 0, y: 0, z: 0.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -578,4 +578,4 @@ SceneRoots:
   - {fileID: 2076413028}
   - {fileID: 14957341}
   - {fileID: 716487196}
-  - {fileID: 1983995746}
+  - {fileID: 1646130997}
