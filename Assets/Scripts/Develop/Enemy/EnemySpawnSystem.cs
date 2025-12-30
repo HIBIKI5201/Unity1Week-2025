@@ -1,20 +1,33 @@
-using System;
-using Unity.Entities;
-using Unity.Transforms;
+using System.Collections;
 using UnityEngine;
 
-
-public class EnemySpawn:MonoBehaviour
+public sealed class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private GameObject _enemyPrefab;
-    private float _timer =  0;
-    private void Update()
+    [SerializeField] private int _spawnAmount = 5;
+    [SerializeField] private float _intervalSeconds = 0.5f;
+
+    /// <summary>
+    /// Signal Receiver から呼ばれるスポーン開始
+    /// </summary>
+    public void StartSpawn()
     {
-        _timer += Time.deltaTime;
-        if (_timer > 0.5f)
+        StartCoroutine(SpawnRoutine());
+    }
+
+    /// <summary>
+    /// 設定された内容で敵を一定間隔で生成する
+    /// </summary>
+    private IEnumerator SpawnRoutine()
+    {
+        for (int i = 0; i < _spawnAmount; i++)
         {
-            Instantiate(_enemyPrefab);
-            _timer = 0;
+            Instantiate(
+               _enemyPrefab,
+                transform.position,
+                Quaternion.identity);
+
+            yield return new WaitForSeconds(_intervalSeconds);
         }
     }
 }

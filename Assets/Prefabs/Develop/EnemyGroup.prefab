@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8694843991217812453}
   - component: {fileID: 202342240345648478}
   - component: {fileID: 2634333195550220922}
-  - component: {fileID: 4329817256756657163}
   m_Layer: 0
   m_Name: EnemyGroup
   m_TagString: Untagged
@@ -64,20 +63,6 @@ MonoBehaviour:
   _waveAmplitude: 1
   _waveFrequency: 1
   _currentType: 3
---- !u!114 &4329817256756657163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4447814665876130076}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bff6d6f250590c4c825dcd1151d4d5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyMoveSpline
-  _speed: 5
-  _currentType: 3
 --- !u!1 &8113543262548634316
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,7 +75,6 @@ GameObject:
   - component: {fileID: 1333370105941357149}
   - component: {fileID: 6163594120746702493}
   - component: {fileID: 4681625414811368282}
-  - component: {fileID: 3689338891188223273}
   m_Layer: 0
   m_Name: EnemyCapsel
   m_TagString: Untagged
@@ -186,26 +170,3 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3689338891188223273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8113543262548634316}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29a074d529cf945029ef7cf40540c9df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Splines::UnityEngine.Splines.SplineAnimate
-  m_Target: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_LoopMode: 1
-  m_Method: 0
-  m_Duration: 3.07
-  m_MaxSpeed: 1.0233383
-  m_EasingMode: 0
-  m_AlignmentMode: 1
-  m_ObjectForwardAxis: 2
-  m_ObjectUpAxis: 1
-  m_StartOffset: 0
