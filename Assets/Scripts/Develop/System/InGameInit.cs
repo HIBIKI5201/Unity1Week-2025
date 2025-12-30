@@ -10,6 +10,7 @@ public class InGameInit : MonoBehaviour
     [SerializeField] private float _cameraMoveSpeed = 2f;
     private Camera _camera;
     private AbilityRepository _abilityRepository;
+    private AudioManager _audioManager;
 
     private void Awake()
     {
@@ -28,6 +29,9 @@ public class InGameInit : MonoBehaviour
         }
         _cameraMover.Init(_cameraMoveSpeed);
         _camera = ServiceLocator.GetInstance<Camera>();
+        _audioManager = ServiceLocator.GetInstance<AudioManager>();
         _playerController.Init(_config, _camera, _cameraMover);
+        _audioManager.StopAllAudioIfPlaying();
+        _audioManager.PlayBGM("InGame");
     }
 }
