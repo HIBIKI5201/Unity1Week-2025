@@ -13,7 +13,11 @@ public class InGameInit : MonoBehaviour
 
     private void Awake()
     {
-        _abilityRepository = ServiceLocator.GetInstance<AblityRepository>();
+        if (!ServiceLocator.TryGetInstance(out _abilityRepository))
+        {
+            _abilityRepository = new AblityRepository();
+            ServiceLocator.RegisterInstance(_abilityRepository, ServiceLocator.LocateType.Locator);
+        }
         // ScriptableObject で定義したマップがあれば登録
         if (_abilityMap != null && _abilityMap.Entries != null)
         {

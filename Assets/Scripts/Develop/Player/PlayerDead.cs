@@ -1,6 +1,5 @@
 using SymphonyFrameWork.System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerDead
 {
@@ -10,11 +9,16 @@ public class PlayerDead
         _undeadName = playerConfig.InGameName;
     }
 
-    private string _sceneName;
-    private string _undeadName;
+    private readonly string _sceneName;
+    private readonly string _undeadName;
 
     public void OnDead()
     {
+        if (ServiceLocator.TryGetInstance<AblityRepository>(out var repository))
+        {
+            repository.GetAndConsumeMappedAbilities();
+        }
+
         SceneLoader.UnloadScene(_undeadName);
         Debug.Log("PlayerDead: Load Title Scene");
         SceneLoader.LoadScene(_sceneName);

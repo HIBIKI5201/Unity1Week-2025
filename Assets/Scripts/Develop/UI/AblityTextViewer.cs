@@ -6,60 +6,67 @@ public class AblityTextViewer : MonoBehaviour
 {
     [SerializeField] private TMP_Text[] _text;
     [SerializeField] private AblityName _ablityName;
-    private AblityManager _ablityManager;
+    private AblityRepository _ablityRepository;
 
     private void Start()
     {
-        _ablityManager = ServiceLocator.GetInstance<AblityManager>();
+        _ablityRepository = ServiceLocator.GetInstance<AblityRepository>();
         Refresh();
     }
 
     /// <summary>
-    /// パッシブアビリティ表示を更新
+    /// Repository から付与済みアビリティを取得して表示
     /// </summary>
     public void Refresh()
     {
-        foreach (var t in _text)
+        foreach (var label in _text)
         {
-            t.text = "--------------";
-            t.gameObject.SetActive(false);
+            label.text = "--------------";
+            label.gameObject.SetActive(false);
         }
-        //アクティブアビリティを取得
-        var active = _ablityManager.GetActive();
-        //パッシブアビリティを取得
-        var passives = _ablityManager.GetPassives();
-        //上から順に表示
+
+        if (_ablityRepository == null)
+        {
+            _ablityRepository = ServiceLocator.GetInstance<AblityRepository>();
+            if (_ablityRepository == null)
+            {
+                Debug.LogWarning("AblityTextViewer: AblityRepository が取得できませんでした。");
+                return;
+            }
+        }
+
+        var grantedAbilities = _ablityRepository.GetGrantedAbilities();
+        if (grantedAbilities == null || grantedAbilities.Count == 0)
+        {
+            return;
+        }
+
         int index = 0;
-        // アクティブアビリティ表示
-        if (index < _text.Length)
+        foreach (var ability in grantedAbilities)
         {
-            _text[index].text = $"{GetName(active)}";
-            _text[index].gameObject.SetActive(true);
-            index++;
-        }
+            if (ability == AblityType.None)
+            {
+                continue;
+            }
 
-        // パッシブアビリティ表示
-        foreach (var p in passives)
-        {
             if (index >= _text.Length)
+            {
                 break;
+            }
 
-            _text[index].text = $"{GetName(p)}";
+            _text[index].text = GetName(ability);
             _text[index].gameObject.SetActive(true);
             index++;
         }
     }
 
-    /// <summary>
-    /// Ability → 表示名変換
-    /// </summary>
-    private string GetName(object ability)
+    private string GetName(AblityType ability)
     {
-        if (ability == null) return "";
+        if (_ablityName != null)
+        {
+            return _ablityName.GetName(ability);
+        }
 
-        if (ability is IAbilityTypeHolder holder)
-            return _ablityName.GetName(holder.AbilityType);
-
-        return ability.GetType().Name;
+        return ability.ToString();
     }
 }
