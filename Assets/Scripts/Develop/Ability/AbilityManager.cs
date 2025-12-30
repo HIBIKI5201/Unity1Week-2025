@@ -4,17 +4,37 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーのアクティブおよびパッシブアビリティを管理するコンポーネント。
 /// </summary>
-public class AbilityManager
+public class AbilityManager : MonoBehaviour
 {
-    private IActiveAbility _active;
+    // アクティブアビリティ
+    private IActiveAblity _active;
+    // パッシブアビリティのリスト
     private readonly List<IPassiveAbility> _passives = new();
+
+    /// <summary>
+    /// アクティブアビリティを取得。
+    /// </summary>
+    /// <returns></returns>
+    public IActiveAblity GetActive()
+    {
+        return _active;
+    }
+
+    /// <summary>
+    /// パッシブアビリティを取得。
+    /// </summary>
+    /// <returns></returns>
+    public IReadOnlyList<IPassiveAbility> GetPassives()
+    {
+        return _passives;
+    }
 
     /// <summary>
     /// アクティブアビリティを設定。
     /// 既に設定されているアクティブは Deactivate() を呼んで安全に停止する。
     /// </summary>
     /// <param name="ability">設定するアクティブアビリティ（null で解除）</param>
-    public void SetActive(IActiveAbility ability)
+    public void SetActive(IActiveAblity ability)
     {
         if (_active != null)
         {
@@ -95,4 +115,5 @@ public class AbilityManager
         foreach (var p in _passives)
             p.OnHit(ref ctx);
     }
+    
 }

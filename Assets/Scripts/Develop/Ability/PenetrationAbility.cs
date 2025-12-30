@@ -1,6 +1,7 @@
-public class PenetrationAbility : IPassiveAbility
+public class PenetrationAbility : IPassiveAbility,IAbilityTypeHolder
 {
     private readonly int _penetrationCount;
+    public AbilityType AbilityType => AbilityType.Penetration;
 
     public PenetrationAbility(int penetrationCount)
     {
