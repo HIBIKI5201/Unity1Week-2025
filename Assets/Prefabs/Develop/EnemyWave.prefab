@@ -50,6 +50,7 @@ MonoBehaviour:
   _radius: 1
   _healthCreate: {fileID: 2251690419321999886}
   _id: 10001
+  horming: 0
 --- !u!33 &1522463160451537323
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -189,5 +190,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bff6d6f250590c4c825dcd1151d4d5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMoveSpline
-  _splineContainer: {fileID: 6314542182586583425, guid: 921b2ce3f872b2b43a154f7c2d675e93, type: 3}
   _speed: 5
+  _currentType: 1
