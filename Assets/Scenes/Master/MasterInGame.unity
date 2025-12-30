@@ -224,9 +224,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-    - target: {fileID: 8044307047149778485, guid: c1831c5cfc866504a87cd24a1aa89a85, type: 3}
-=======
     - target: {fileID: 3813926556715607641, guid: 992ec6897da8e7341ad31bc4b1c1b823, type: 3}
       propertyPath: _id
       value: 10002
@@ -260,7 +257,6 @@ PrefabInstance:
       value: -0.000000020083347
       objectReference: {fileID: 0}
     - target: {fileID: 6755221228812814496, guid: 992ec6897da8e7341ad31bc4b1c1b823, type: 3}
->>>>>>> 3f4456e48b06d175b869f0a888f5cadd09c7c093
       propertyPath: m_Name
       value: BossSpline
       objectReference: {fileID: 0}
@@ -1406,8 +1402,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 867401959}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
-=======
 --- !u!1001 &1898937675
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1509,7 +1503,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 992ec6897da8e7341ad31bc4b1c1b823, type: 3}
->>>>>>> 3f4456e48b06d175b869f0a888f5cadd09c7c093
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
