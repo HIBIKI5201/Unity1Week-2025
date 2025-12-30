@@ -8,7 +8,6 @@ public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private float _radius;
     [SerializeField] private EnemyHealthCreate _healthCreate;
-    private Transform _playerPosition;
 
     [SerializeField] private int _id;
     private Entity _entity;

@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1972006094}
   - component: {fileID: 1972006093}
+  - component: {fileID: 1972006095}
   m_Layer: 0
   m_Name: BulletPrefabBufferAuthring
   m_TagString: Untagged
@@ -165,6 +166,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1972006095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972006092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc7f84b44d164fe4db6cccd9b1beeb6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BulletEnemyPrefabBufferAuthring
+  bulletPrefabs:
+  - {fileID: -4102652153208108966, guid: 62ac3876aea5d3f4192f6b7120ad2b58, type: 3}
+  - {fileID: -4102652153208108966, guid: 3d7af436f240ccd43868c4feab9bd4fc, type: 3}
+  - {fileID: -4102652153208108966, guid: f017888ae702c0146a5ec723255d1d24, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
