@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private PlayerDead _playerDead;
     private AbilityManager _abilityManager;
     private AbilityRepository _abilityRepository;
+    private Renderer _renderer;
     private Vector2 _moveDirection;
     private EntityManager _em;
 
@@ -47,6 +48,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        _renderer = GetComponent<Renderer>();
+        if(_renderer) Debug.Log(_renderer.material.name);
         _em = World.DefaultGameObjectInjectionWorld.EntityManager;
         _inputBuffer = GetComponent<InputBuffer>();
         Collider playerCollider = GetComponent<Collider>();
@@ -148,7 +151,11 @@ public class PlayerController : MonoBehaviour
         {
             if (_ghostInstance == null)
             {
-                _ghostInstance = new GhostAbility(_config);
+                if (_renderer == null)
+                {
+                    _renderer = GetComponent<Renderer>();
+                }
+                _ghostInstance = new GhostAbility(_config, _renderer);
             }
             // 常に AbilityManager に設定して有効化（Start/ランタイムどちらでも）
             _abilityManager.SetActive(_ghostInstance);
@@ -209,7 +216,11 @@ public class PlayerController : MonoBehaviour
                 case AbilityType.Ghost:
                     if (!_repoGhostApplied)
                     {
-                        if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config);
+                        if (_renderer == null)
+                        {
+                            _renderer = GetComponent<Renderer>();
+                        }
+                        if (_ghostInstance == null) _ghostInstance = new GhostAbility(_config, _renderer);
                         _abilityManager.SetActive(_ghostInstance);
                         _repoGhostApplied = true;
                         Debug.Log("ApplyGrantedAbilities: ゴーストアビリティを登録しました。");

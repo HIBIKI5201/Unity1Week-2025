@@ -20,3 +20,4 @@ MonoBehaviour:
   _penetrationCount: 2
   _titleName: MasterTitle
   _inGameName: MasterInGame
+  _ghostMaterial: {fileID: 2100000, guid: 8d3b8486a96b67a4ba593c181340f048, type: 2}

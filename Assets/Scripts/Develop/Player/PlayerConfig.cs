@@ -12,6 +12,7 @@ public class PlayerConfig : ScriptableObject
     public int PenetrationCount => _penetrationCount;
     public string TitleName => _titleName;
     public string InGameName => _inGameName;
+    public Material GhostMaterial => _ghostMaterial;
 
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _attackSpeed = 1f;
@@ -21,4 +22,5 @@ public class PlayerConfig : ScriptableObject
     [SerializeField] private int _penetrationCount = 1;
     [SerializeField] private string _titleName = string.Empty;
     [SerializeField] private string _inGameName = string.Empty;
+    [SerializeField] private Material _ghostMaterial;
 }

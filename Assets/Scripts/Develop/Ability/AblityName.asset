@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1111217dbf1857443ba9cd6e27cccbc1, type: 3}
   m_Name: AblityName
   m_EditorClassIdentifier: Assembly-CSharp::AblityName
-  AblityEntries:
+  AbilityEntries:
   - Name: Ghost
     Ability: 1
   - Name: Penetration
