@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private AbilityManager _abilityManager;
     private AbilityRepository _abilityRepository;
     private Renderer _renderer;
+    private AudioManager _audioManager;
     private Vector2 _moveDirection;
     private EntityManager _em;
 
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour
         _playerAttacker = new PlayerAttacker(_em, _config);
         _playerCollision = new PlayerCollision(_em, transform, _config, () => _ghostInstance != null && _ghostInstance.IsActive);
         _playerDead = new PlayerDead(_config);
+        _audioManager = ServiceLocator.GetInstance<AudioManager>();
     }
 
     private void OnDestroy()
@@ -130,6 +132,7 @@ public class PlayerController : MonoBehaviour
     {
         var ctx = _abilityManager.BuildBulletContext(0, transform.position, transform.forward);
         _playerAttacker?.OnAttack(ctx);
+        _audioManager?.PlaySE("Shoot");
     }
 
     private void OnAbility(InputAction.CallbackContext context)
