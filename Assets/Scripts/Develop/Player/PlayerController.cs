@@ -132,7 +132,6 @@ public class PlayerController : MonoBehaviour
     {
         var ctx = _abilityManager.BuildBulletContext(0, transform.position, transform.forward);
         _playerAttacker?.OnAttack(ctx);
-        _audioManager?.PlaySE("Shoot");
     }
 
     private void OnAbility(InputAction.CallbackContext context)

@@ -1,5 +1,5 @@
+using SymphonyFrameWork.System;
 using Unity.Entities;
-using UnityEngine;
 
 public class PlayerAttacker
 {
@@ -7,12 +7,14 @@ public class PlayerAttacker
     {
         _em = em;
         _config = config;
+        _audioManager = ServiceLocator.GetInstance<AudioManager>();
     }
 
     public void OnAttack(in BulletContext ctx)
     {
         //todo:後で銃のクールタイム追加
         _em.Shoot(ctx);
+        _audioManager?.PlaySE("Shoot");
     }
 
     public void OnUpdate()
@@ -22,4 +24,5 @@ public class PlayerAttacker
 
     private EntityManager _em;
     private PlayerConfig _config;
+    private AudioManager _audioManager;
 }
