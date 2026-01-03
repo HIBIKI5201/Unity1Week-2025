@@ -1,5 +1,6 @@
 using SymphonyFrameWork.System;
 using Unity.Entities;
+using UnityEditor.ShaderGraph.Internal;
 
 public class PlayerAttacker
 {
@@ -8,13 +9,18 @@ public class PlayerAttacker
         _em = em;
         _config = config;
         _audioManager = ServiceLocator.GetInstance<AudioManager>();
+        _shotCoolTime = _config.ShotCoolTime;
+        _shotUpdateCoolTime = _config.ShotUpdateCoolTime;
     }
 
-    public void OnAttack(in BulletContext ctx)
+    public void OnAttack(in BulletContext ctx,float time)
     {
-        //todo:後で銃のクールタイム追加
-        _em.Shoot(ctx);
-        _audioManager?.PlaySE("Shoot");
+        if (time - _shotTime >= _shotCoolTime)
+        {
+            _em.Shoot(ctx);
+            _audioManager?.PlaySE("Shoot");
+            _shotTime = time;
+        }
     }
 
     public void OnUpdate()
@@ -25,4 +31,7 @@ public class PlayerAttacker
     private EntityManager _em;
     private PlayerConfig _config;
     private AudioManager _audioManager;
+    private float _shotCoolTime;
+    private float _shotUpdateCoolTime;
+    private float _shotTime;
 }

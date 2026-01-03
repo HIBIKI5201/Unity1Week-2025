@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
     private void OnAttack(InputAction.CallbackContext context)
     {
         var ctx = _abilityManager.BuildBulletContext(0, transform.position, transform.forward);
-        _playerAttacker?.OnAttack(ctx);
+        _playerAttacker?.OnAttack(ctx,Time.time);
     }
 
     private void OnAbility(InputAction.CallbackContext context)
